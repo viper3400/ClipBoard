@@ -81,7 +81,7 @@ namespace ClipBoard
 
         private void writeToCsv()
         {
-            string[] lines = new string[savedItems.Count + recentItems.Count];
+            string[] lines = new string[savedItems.Count + Math.Min(recentItems.Count, 30)];
             int i = 0;
             foreach (string s in savedItems)
             {
@@ -90,6 +90,10 @@ namespace ClipBoard
             foreach (string s in recentItems)
             {
                 lines[i++] = "recent:" + Regex.Escape(s);
+                if (i >= savedItems.Count + 30)
+                {
+                    break;
+                }
             }
             File.WriteAllLines(contentFileName, lines);
         }
@@ -121,7 +125,8 @@ namespace ClipBoard
                     //accept content only of not empty and not too big
                     if (recentItems.Count != 0 && content.Length < 10000)
                     {
-                        recentItems.Add(content);
+                        //recentItems.Add(content);
+                        recentItems.Insert(0, content); //add to top
                         updateList();
                     }
                 }
@@ -142,6 +147,8 @@ namespace ClipBoard
         private void listView_DoubleClick(object sender, EventArgs e)
         {
             copyTextToClipBoard();
+
+            //hide after text copied to clipboard
             this.WindowState = FormWindowState.Minimized;
         }
 
