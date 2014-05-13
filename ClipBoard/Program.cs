@@ -51,8 +51,7 @@ namespace ClipBoard
             {
                 int vkCode = Marshal.ReadInt32(lParam);
                 Keys keys = (Keys)vkCode;
-                //String key = ((Keys)vkCode).ToString();
-                mf.updateList(keys);
+                mf.keyPressedHandler(keys);
             }
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
         }

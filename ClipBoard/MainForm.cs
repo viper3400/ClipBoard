@@ -17,17 +17,41 @@ namespace ClipBoard
     {
         public ListView list;
         private static string contentFileName = "../../content.csv";
+        private List<string> savedItems;
+        private List<string> recentItems;
         public MainForm()
         {
             InitializeComponent();
             list = this.listView;
-            list.Columns[1].Width = this.list.Width - 50;
-            loadContent(contentFileName);
+            savedItems = new List<string>(10);
+            recentItems = new List<string>(10);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            
+            list.Columns[1].Width = this.list.Width - 50;
+            loadContent(contentFileName);
+            updateList();
+        }
+
+        private void updateList()
+        {
+            list.Items.Clear();
+            int i = 1;
+            foreach (string s in savedItems)
+            {
+                string content = Regex.Unescape(s);
+                ListViewItem lvi = new ListViewItem(new string[] { (i++).ToString(), content });
+                list.Items.Add(lvi);
+                list.Groups[0].Items.Add(lvi);
+            }
+            foreach (string s in recentItems)
+            {
+                string content = Regex.Unescape(s);
+                ListViewItem lvi = new ListViewItem(new string[] { (i++).ToString(), content });
+                list.Items.Add(lvi);
+                list.Groups[1].Items.Add(lvi);
+            }
         }
 
         private void loadContent(string contentFileName)
@@ -37,51 +61,29 @@ namespace ClipBoard
             {
                 if (s.StartsWith("saved:"))
                 {
-                    int cnt = list.Groups[0].Items.Count;
-                    string content = Regex.Unescape(s.Substring(7));
-                    ListViewItem lvi = new ListViewItem(new string[] { (cnt + 1).ToString(), content });
-                    list.Items.Add(lvi);
-                    list.Groups[0].Items.Add(lvi);
+                    savedItems.Add(s.Substring(7));
                 }
                 else if (s.StartsWith("recent:"))
                 {
-                    int cnt1 = list.Groups[0].Items.Count;
-                    int cnt2 = list.Groups[1].Items.Count;
-                    string content = Regex.Unescape(s.Substring(7));
-                    ListViewItem lvi = new ListViewItem(new string[] { (cnt1 + cnt2 + 1).ToString(), content });
-                    list.Items.Add(lvi);
-                    list.Groups[1].Items.Add(lvi);
-                    
+                    recentItems.Add(s.Substring(7));
                 }
             }
         }
-        public void updateList(Keys keys)
+        public void keyPressedHandler(Keys keys)
         {
-            int index = this.list.Items.Count + 1;
             //control-c pressed
             if ((ModifierKeys & Keys.Control) == Keys.Control && keys == Keys.C)
             {
              // Thread.Sleep(2000);
-                string content = Clipboard.GetText();
+                string content = Regex.Escape(Clipboard.GetText());
                 if (content.Length != 0)
                 {
-                    if (list.Items.Count == 0) 
+                    if (recentItems.Count == 0 || !content.Equals(recentItems[recentItems.Count - 1]))
                     {
-                        ListViewItem lvi = new ListViewItem(new string[] { index.ToString(), content });
-                        list.Items.Add(lvi);
-                        list.Groups[1].Items.Add(lvi);
-                    }
-                    else
-                    {
-                        string prevCoutent = list.Items[list.Items.Count-1].SubItems[1].Text;
-                        if (!content.Equals(prevCoutent))
-                        {
-                            ListViewItem lvi = new ListViewItem(new string[] { index.ToString(), content });
-                            list.Items.Add(lvi);
-                            list.Groups[1].Items.Add(lvi);
-                        }
+                        recentItems.Add(content);
                     }
                 }
+                updateList();
             }
         }
 
