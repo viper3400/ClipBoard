@@ -126,6 +126,12 @@ namespace ClipBoard
                     }
                 }
             }
+
+            //control-` pressed
+            if ((ModifierKeys & Keys.Control) == Keys.Control && keys == Keys.Oemtilde)
+            {
+                this.WindowState = FormWindowState.Normal;
+            }
         }
 
         private void MainForm_SizeChanged(object sender, EventArgs e)
@@ -136,6 +142,7 @@ namespace ClipBoard
         private void listView_DoubleClick(object sender, EventArgs e)
         {
             copyTextToClipBoard();
+            this.WindowState = FormWindowState.Minimized;
         }
 
         private void copyTextToClipBoard()
