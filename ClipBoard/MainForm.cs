@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -37,7 +38,8 @@ namespace ClipBoard
                 if (s.StartsWith("saved:"))
                 {
                     int cnt = list.Groups[0].Items.Count;
-                    ListViewItem lvi = new ListViewItem(new string[]{(cnt+1).ToString(), s.Substring(7)});
+                    string content = Regex.Unescape(s.Substring(7));
+                    ListViewItem lvi = new ListViewItem(new string[] { (cnt + 1).ToString(), content });
                     list.Items.Add(lvi);
                     list.Groups[0].Items.Add(lvi);
                 }
@@ -45,7 +47,8 @@ namespace ClipBoard
                 {
                     int cnt1 = list.Groups[0].Items.Count;
                     int cnt2 = list.Groups[1].Items.Count;
-                    ListViewItem lvi = new ListViewItem(new string[] { (cnt1+cnt2+1).ToString(), s.Substring(7) });
+                    string content = Regex.Unescape(s.Substring(7));
+                    ListViewItem lvi = new ListViewItem(new string[] { (cnt1 + cnt2 + 1).ToString(), content });
                     list.Items.Add(lvi);
                     list.Groups[1].Items.Add(lvi);
                     
