@@ -161,5 +161,45 @@ namespace ClipBoard
                 Clipboard.SetText(content);
             }
         }
+
+        private void listView_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                contextMenuStrip.Show(list, e.X, e.Y);
+
+                if (list.SelectedItems[0].Group.Equals(list.Groups[0])) // in Saved Group
+                {
+                    saveToolStripMenuItem.Enabled = false;
+                }
+                else // in Recent group
+                {
+                    saveToolStripMenuItem.Enabled = true;
+                }
+            }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int index = list.SelectedIndices[0] - list.Groups[0].Items.Count;
+            savedItems.Add(recentItems[index]);
+            updateList();
+        }
+
+        private void removeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (list.SelectedItems[0].Group.Equals(list.Groups[0])) // in Saved Group
+            {
+                int index = list.SelectedIndices[0];
+                savedItems.RemoveAt(index);
+            }
+            else // in Recent group
+            {
+                int index = list.SelectedIndices[0] - list.Groups[0].Items.Count;
+                recentItems.RemoveAt(index);
+            }
+            updateList();
+        }
+
     }
 }
