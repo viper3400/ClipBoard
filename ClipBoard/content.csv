@@ -9,11 +9,14 @@ saved: Logging
 saved: 其所以然才能真的理解\r\n经常总结、转述、回顾有利于深刻记忆\r\n经常探讨、交流、解释给别人听
 saved: RegularEnumSet
 saved: NavigableMap
+saved: Comparable\ 
+recent:static\ int\ subtract\(int\ a,\ int\ b\)\ \{
+recent:divide\(int\ a,\ int\ b\)\ 
+recent:c\ int\ subtract\(int\ a,\ int\ b\)\ \{\r\n\ \ \ \ \ \ \ \ return\ a\ \+\ \(-b\);
 recent:\r\nAdvanced\ users\ wanting\ to\ i
 recent:users\ wanting\ to\ i
 recent:\ \(most\ recent\ c
 recent:计文档国家
-recent:Comparable\ 
 recent:AbstractCollection\ 
 recent:RandomAccess\ 
 recent:ConcurrentModificationException

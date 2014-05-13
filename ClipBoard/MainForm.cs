@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -113,6 +107,9 @@ namespace ClipBoard
                 }
             }
         }
+
+        //[DllImport("user32.dll")] private static extern IntPtr GetForegroundWindow();
+
         public async void keyPressedHandler(Keys keys)
         {
             //control-c pressed
@@ -135,7 +132,13 @@ namespace ClipBoard
             //control-` pressed
             if ((ModifierKeys & Keys.Control) == Keys.Control && keys == Keys.Oemtilde)
             {
+                notifyIcon.Visible = false;
+                this.Show();
                 this.WindowState = FormWindowState.Normal;
+                //if (GetForegroundWindow() != Process.GetCurrentProcess().MainWindowHandle)
+                //{
+                //    this.TopLevel = true;
+                //}
             }
         }
 
@@ -199,6 +202,34 @@ namespace ClipBoard
                 recentItems.RemoveAt(index);
             }
             updateList();
+        }
+
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            if (FormWindowState.Minimized == this.WindowState)
+            {
+                notifyIcon.Visible = true;
+                //notifyIcon.ShowBalloonTip(200);
+                this.Hide();
+            }
+            else if (FormWindowState.Normal == this.WindowState)
+            {
+                notifyIcon.Visible = false;
+            }
+        }
+
+        private void notifyIcon_MouseClick(object sender, MouseEventArgs e)
+        {
+            notifyIcon.Visible = false;
+            this.WindowState = FormWindowState.Normal;
+            this.Show();
+        }
+
+        private void notifyIcon_Click(object sender, EventArgs e)
+        {
+            notifyIcon.Visible = false;
+            this.WindowState = FormWindowState.Normal;
+            this.Show();
         }
 
     }
