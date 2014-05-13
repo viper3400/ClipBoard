@@ -40,20 +40,37 @@ namespace ClipBoard
             int i = 1;
             foreach (string s in savedItems)
             {
-                string content = Regex.Unescape(s);
+                //string content = Regex.Unescape(s);
                 ListViewItem lvi = 
-                    new ListViewItem(new string[] { (i++).ToString(), content });
+                    new ListViewItem(new string[] { (i++).ToString(), s });
                 list.Items.Add(lvi);
                 list.Groups[0].Items.Add(lvi);
             }
             foreach (string s in recentItems)
             {
-                string content = Regex.Unescape(s);
+                //string content = Regex.Unescape(s);
                 ListViewItem lvi = 
-                    new ListViewItem(new string[] { (i++).ToString(), content });
+                    new ListViewItem(new string[] { (i++).ToString(), s });
                 list.Items.Add(lvi);
                 list.Groups[1].Items.Add(lvi);
             }
+
+            writeToCsv();
+        }
+
+        private void writeToCsv()
+        {
+            string[] lines = new string[savedItems.Count + recentItems.Count];
+            int i = 0;
+            foreach (string s in savedItems)
+            {
+                lines[i++] = "saved: " + Regex.Escape(s);
+            }
+            foreach (string s in recentItems)
+            {
+                lines[i++] = "recent:" + Regex.Escape(s);
+            }
+            File.WriteAllLines(contentFileName, lines);
         }
 
         private void loadContent(string contentFileName)
@@ -63,11 +80,11 @@ namespace ClipBoard
             {
                 if (s.StartsWith("saved:"))
                 {
-                    savedItems.Add(s.Substring(7));
+                    savedItems.Add(Regex.Unescape(s.Substring(7)));
                 }
                 else if (s.StartsWith("recent:"))
                 {
-                    recentItems.Add(s.Substring(7));
+                    recentItems.Add(Regex.Unescape(s.Substring(7)));
                 }
             }
         }
@@ -77,16 +94,16 @@ namespace ClipBoard
             if ((ModifierKeys & Keys.Control) == Keys.Control && keys == Keys.C)
             {
                 await Task.Delay(3000);
-                string content = Regex.Escape(Clipboard.GetText());
+                string content = Clipboard.GetText();
                 if (content.Length != 0)
                 {
                     if ((recentItems.Count == 0 || !content.Equals(recentItems[recentItems.Count - 1])) 
                         && content.Length < 10000)
                     {
                         recentItems.Add(content);
+                        updateList();
                     }
                 }
-                updateList();
             }
         }
 
