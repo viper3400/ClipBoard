@@ -36,6 +36,7 @@ namespace ClipBoard
 
         private void updateList()
         {
+            removeDuplicates();
             list.Items.Clear();
             int i = 1;
             foreach (string s in savedItems)
@@ -55,7 +56,27 @@ namespace ClipBoard
                 list.Groups[1].Items.Add(lvi);
             }
 
+            //frequently write to csv
             writeToCsv();
+        }
+
+        private void removeDuplicates()
+        {
+            for (int i = savedItems.Count - 1; i >= 0; i--)
+            {
+                if (savedItems.IndexOf(savedItems[i]) != i)
+                {
+                    savedItems.RemoveAt(i);
+                }
+            }
+            for (int i = recentItems.Count - 1; i >= 0; i--)
+            {
+                if (recentItems.IndexOf(recentItems[i]) != i 
+                    || savedItems.IndexOf(recentItems[i]) >= 0 )
+                {
+                    recentItems.RemoveAt(i);
+                }
+            }
         }
 
         private void writeToCsv()
@@ -97,8 +118,8 @@ namespace ClipBoard
                 string content = Clipboard.GetText();
                 if (content.Length != 0)
                 {
-                    if ((recentItems.Count == 0 || !content.Equals(recentItems[recentItems.Count - 1])) 
-                        && content.Length < 10000)
+                    //accept content only of not empty and not too big
+                    if (recentItems.Count != 0 && content.Length < 10000)
                     {
                         recentItems.Add(content);
                         updateList();
