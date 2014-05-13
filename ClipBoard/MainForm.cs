@@ -41,14 +41,16 @@ namespace ClipBoard
             foreach (string s in savedItems)
             {
                 string content = Regex.Unescape(s);
-                ListViewItem lvi = new ListViewItem(new string[] { (i++).ToString(), content });
+                ListViewItem lvi = 
+                    new ListViewItem(new string[] { (i++).ToString(), content });
                 list.Items.Add(lvi);
                 list.Groups[0].Items.Add(lvi);
             }
             foreach (string s in recentItems)
             {
                 string content = Regex.Unescape(s);
-                ListViewItem lvi = new ListViewItem(new string[] { (i++).ToString(), content });
+                ListViewItem lvi = 
+                    new ListViewItem(new string[] { (i++).ToString(), content });
                 list.Items.Add(lvi);
                 list.Groups[1].Items.Add(lvi);
             }
@@ -69,16 +71,17 @@ namespace ClipBoard
                 }
             }
         }
-        public void keyPressedHandler(Keys keys)
+        public async void keyPressedHandler(Keys keys)
         {
             //control-c pressed
             if ((ModifierKeys & Keys.Control) == Keys.Control && keys == Keys.C)
             {
-             // Thread.Sleep(2000);
+                await Task.Delay(3000);
                 string content = Regex.Escape(Clipboard.GetText());
                 if (content.Length != 0)
                 {
-                    if (recentItems.Count == 0 || !content.Equals(recentItems[recentItems.Count - 1]))
+                    if ((recentItems.Count == 0 || !content.Equals(recentItems[recentItems.Count - 1])) 
+                        && content.Length < 10000)
                     {
                         recentItems.Add(content);
                     }
@@ -99,9 +102,12 @@ namespace ClipBoard
 
         private void copyTextToClipBoard()
         {
-            int index = this.list.SelectedIndices[0];
-            string content = this.list.Items[index].SubItems[1].Text;
-            Clipboard.SetText(content);
+            if (this.list.SelectedIndices.Count > 0)
+            {
+                int index = this.list.SelectedIndices[0];
+                string content = this.list.Items[index].SubItems[1].Text;
+                Clipboard.SetText(content);
+            }
         }
     }
 }
