@@ -1,33 +1,33 @@
 saved: ralph\.wen@gmail\.com
-saved: yawen@gmail\.com
-saved: Administrator
-saved: newman1
-saved: localhost:8080
-saved: AbstractSet\ 
-saved: 思考
-saved: Logging
-saved: 其所以然才能真的理解\r\n经常总结、转述、回顾有利于深刻记忆\r\n经常探讨、交流、解释给别人听
-saved: RegularEnumSet
-saved: NavigableMap
-saved: Comparable\ 
+saved: 浙江杭州市西湖区古荡街道文二路391西湖国际群楼三楼微策略
+saved: 18868407198
+recent:school\ -\ learn\ chrome\ dev\ tools\r\ngo\ thru\ git\ immersio
+recent:/functional/framework\ level\ test\ automation\ using\ python
+recent:Monkey\ talk\ fo
+recent:169\.254\.233\.162
+recent:/m-lab/ndt/2014/01/
+recent:https://console\.developers\.google\.com/storage/m-lab/ndt/2014/01/
+recent:https://console\.developers\.google\.com/storage/m-lab/ndt/2013/01/
+recent:gs://m-lab/ndt/
+recent:gsutil\ cp\ gs://m-lab/ndt/2009/02/18/20090218T000000Z-mlab1-lga01-ndt-0000\.tgz\.
+recent:cp\ gs://m-lab/ndt/2009/02/18/20090218T000000Z-mlab1-lga01-ndt-0000\.tgz\.
+recent:gsutil\ ls\ -l\ gs://m-lab/ndt/
+recent:export\ PATH=\$\{PATH}:\$HOME/gsutil
+recent:tar\ xfz\ gsutil\.tar\.gz\ -C\ \$HOME
+recent:https://console\.developers\.google\.com/storage/m-lab/ndt/2013/01/01/
+recent:\ https://storage\.cloud\.google\.com/m-lab/list/all_mlab_tarfiles\.txt\.gz
+recent:EB20-4
+recent:http://detail\.tmall\.com/item\.htm\?spm=a230r\.1\.14\.119\.NOpsNv&id=38014168697&_u=e2cqq0g9bdc
+recent:玛\ 诗\ 兰特
+recent:玛诗兰特旗舰店
+recent:4abcbabf4b02e4cc4aff
+recent:https://gist\.github\.com/yadongwen/4abcbabf4b02e4cc4aff
+recent:\#\ Java\ CheatSheet\n\n\#\#Head\ quarter\ based\ in\ Mission\ Street\ which\ I\ visited\ many\ times\ and\ liked\ very\ much\.\n\#\#Coderpad\.io有时抽风，如果花时间太长然后失败可以重试\n>\ There\ was\ a\ problem\ executing\ the\ code\.\ Please\ try\ again\.\n\n\#\#\#\#OO\n-\ polymorphsim\n-\ override\n-\ overload:\ methods\ with\ same\ name\ but\ diff\ vars,\ ie\.\ diff\ signitures\ \(return\ type\ doesnt\ count\)\n-\ abstract\ class\ vs\ interface\n\ \ \ \ -\ abstract\ class\ can\ have\ fields\ that\ are\ not\ static\ and\ final,\ and\ you\ can\ define\ private,\ protected\ and\ public\ contrete\ methods,\ whereas\ fields\ in\ a\ interface\ must\ be\ static\ final\ and\ all\ methods\ must\ be\ abstract\ and\ public\n\ \ \ \ -\ you\ can\ extend\ only\ one\ abstract\ class\ but\ can\ implement\ multiple\ interfaces\n\n\#\#\#\#String/StringBuilder/StringBuffer\n-\ StringBuffer\ is\ synchronized,\ StringBuilder\ is\ not\ which\ makes\ it\ faster\.\ Since\ sharing\ the\ string\ buffer\ among\ threads\ is\ very\ rare\ so\ StringBuilder\ is\ perfered\ most\ of\ the\ time\.\n```\nstring\.charAt\(i\);\nstring\.length\(\);\nstringBuffer\.append\(\);\nstringBuffer\.toString\(\);\n```\n\n\#\#\#\#Array\n```\nint\[]\[]\ m\ =\ new\ int\[]\[]\{\{1,2,3},null,\{4,5}};\nm\.length;\n```\n\n\#\#\#\#Data\ Structures\n-\ ArrayList\n```\nimport\ java\.util\.ArrayList;\narrayList\.add\(e\);\narrayList\.remove\(index\);\narrayList\.remove\(object\);\ //first\ occurrence\narrayList\.get\(index\);\narrayList\.set\(index,\ e\);\narrayList\.size\(\);\n```\n\n-\ HashMap\n```\nimport\ java\.util\.HashMap;\nnew\ HashMap<Integer,\ Character>\(\);\nhashMap\.put\(k,v\);\nhashMap\.get\(k\);\nhashMap\.size\(\);\nhashMap\.containsKey\(k\);\n```\n-\ HashSet\n```\nnew\ HashSet<Character>\(\);\nhashSet\.add\(e\);\nhashSet\.contains\(e\);\n```\n-\ PriorityQueue\n```\npq\.size\(\);\npq\.poll\(\);\ //get\ and\ remove\ the\ min\ value\npq\.peek\(\);\ //get\ the\ min\ value\npq\.add\(e\);\npq\.contains\(e\);\npq\.remove\(e\);\npq\.size\(\);\n```\n\#\#\#\#Other\ Lang\ Features\n```\nvoid\ f\(Stirng\.\.\.\ args\)\ vs\ void\ f\(String\[]\ args\)\n```
+recent:a\[k/2]\ >\ b\[k/2]
+recent:MASSLAND
+recent:15寸电脑放不放的下的？
+recent:resizable
 recent:static\ int\ subtract\(int\ a,\ int\ b\)\ \{
 recent:divide\(int\ a,\ int\ b\)\ 
 recent:c\ int\ subtract\(int\ a,\ int\ b\)\ \{\r\n\ \ \ \ \ \ \ \ return\ a\ \+\ \(-b\);
 recent:\r\nAdvanced\ users\ wanting\ to\ i
-recent:users\ wanting\ to\ i
-recent:\ \(most\ recent\ c
-recent:计文档国家
-recent:AbstractCollection\ 
-recent:RandomAccess\ 
-recent:ConcurrentModificationException
-recent:Quick\ search
-recent:Dependencies
-recent:Advanced\ users\ wanting\ to\ install\ a\ development\ version\ may\ use\ pip\ to\ grab\ the\ latest\ master\ branch\ \(as\ well\ as\ the\ dev\ version\ of\ the\ Paramiko\ dependency\):\r\n\r\n
-recent:Warning
-recent:meration\?
-recent:e\ name
-recent:\ \t\r\nYep,\ thank\ yo
-recent:was\.\ I\ did\ say\ it\ wa
-recent:软件设计文档国家标准ck
-recent:May\ 13\ 2013\ -\ May\ 13\ 2014
-recent:Initial\ commit\ to\ add\ default\ \.gitIgnore\ and\ \.gitAttribute\ files\.

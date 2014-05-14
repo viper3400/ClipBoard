@@ -122,8 +122,13 @@ namespace ClipBoard
                     //accept content only of not empty and not too big
                     if (recentItems.Count != 0 && content.Length < 10000)
                     {
-                        //recentItems.Add(content);
                         recentItems.Insert(0, content); //add to top
+
+                        //limit number of recent items
+                        if (recentItems.Count > 100)
+                        {
+                            recentItems.RemoveAt(recentItems.Count - 1);
+                        }
                         updateList();
                     }
                 }
