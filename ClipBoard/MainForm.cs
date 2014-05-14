@@ -108,8 +108,6 @@ namespace ClipBoard
             }
         }
 
-        //[DllImport("user32.dll")] private static extern IntPtr GetForegroundWindow();
-
         public async void keyPressedHandler(Keys keys)
         {
             //control-c pressed
@@ -140,10 +138,10 @@ namespace ClipBoard
                 notifyIcon.Visible = false;
                 this.Show();
                 this.WindowState = FormWindowState.Normal;
-                //if (GetForegroundWindow() != Process.GetCurrentProcess().MainWindowHandle)
-                //{
-                //    this.TopLevel = true;
-                //}
+
+                //bring to front if not
+                this.TopMost = true;
+                this.TopMost = false;
             }
         }
 
@@ -214,7 +212,6 @@ namespace ClipBoard
             if (FormWindowState.Minimized == this.WindowState)
             {
                 notifyIcon.Visible = true;
-                //notifyIcon.ShowBalloonTip(200);
                 this.Hide();
             }
             else if (FormWindowState.Normal == this.WindowState)
