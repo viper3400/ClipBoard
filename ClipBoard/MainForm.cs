@@ -150,12 +150,16 @@ namespace ClipBoard
             list.Columns[1].Width = this.list.Width - 50;
         }
 
-        private void listView_DoubleClick(object sender, EventArgs e)
+        private async void listView_DoubleClick(object sender, EventArgs e)
         {
             copyTextToClipBoard();
 
             //hide after text copied to clipboard
             this.WindowState = FormWindowState.Minimized;
+
+            // paste to curreMonkey talk font cursor
+            await Task.Delay(500);
+            SendKeys.Send("^V");
         }
 
         private void copyTextToClipBoard()
@@ -182,6 +186,10 @@ namespace ClipBoard
                 {
                     saveToolStripMenuItem.Enabled = true;
                 }
+            }
+            else if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            {
+                this.listView_DoubleClick(sender, e);
             }
         }
 
