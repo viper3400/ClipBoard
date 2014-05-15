@@ -35,7 +35,6 @@ namespace ClipBoard
             int i = 1;
             foreach (string s in savedItems)
             {
-                //string content = Regex.Unescape(s);
                 ListViewItem lvi = 
                     new ListViewItem(new string[] { (i++).ToString(), s });
                 list.Items.Add(lvi);
@@ -43,7 +42,6 @@ namespace ClipBoard
             }
             foreach (string s in recentItems)
             {
-                //string content = Regex.Unescape(s);
                 ListViewItem lvi = 
                     new ListViewItem(new string[] { (i++).ToString(), s });
                 list.Items.Add(lvi);
