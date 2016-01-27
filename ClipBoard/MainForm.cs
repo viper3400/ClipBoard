@@ -13,12 +13,14 @@ namespace ClipBoard
         private static string contentFileName = "../../content.csv";
         private List<string> savedItems;
         private List<string> recentItems;
+        IntPtr _ClipboardViewerNext;
         public MainForm()
         {
             InitializeComponent();
             list = this.listView;
             savedItems = new List<string>(10);
             recentItems = new List<string>(10);
+            _ClipboardViewerNext = ClipBoard.Program.SetClipboardViewer(this.Handle);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -26,6 +28,11 @@ namespace ClipBoard
             list.Columns[1].Width = this.list.Width - 50;
             loadContent(contentFileName);
             updateList();
+        }
+
+        private void MainForm_FormClosing(Object sender, FormClosingEventArgs e)
+        {
+            ClipBoard.Program.ChangeClipboardChain(this.Handle, _ClipboardViewerNext);
         }
 
         private void updateList()
@@ -106,30 +113,8 @@ namespace ClipBoard
             }
         }
 
-        public async void keyPressedHandler(Keys keys)
+        public void keyPressedHandler(Keys keys)
         {
-            //control-c pressed
-            if ((ModifierKeys & Keys.Control) == Keys.Control && keys == Keys.C)
-            {
-                await Task.Delay(3000);
-                string content = Clipboard.GetText();
-                if (content.Length != 0)
-                {
-                    //accept content only of not empty and not too big
-                    if (recentItems.Count != 0 && content.Length < 10000)
-                    {
-                        recentItems.Insert(0, content); //add to top
-
-                        //limit number of recent items
-                        if (recentItems.Count > 100)
-                        {
-                            recentItems.RemoveAt(recentItems.Count - 1);
-                        }
-                        updateList();
-                    }
-                }
-            }
-
             //control-` pressed
             if ((ModifierKeys & Keys.Control) == Keys.Control && keys == Keys.Oemtilde)
             {
@@ -140,6 +125,26 @@ namespace ClipBoard
                 //bring to front if not
                 this.TopMost = true;
                 this.TopMost = false;
+            }
+        }
+
+        private void handleClipboardChanged()
+        {
+            string content = Clipboard.GetText();
+            if (content.Length != 0)
+            {
+                //accept content only of not empty and not too big
+                if (recentItems.Count != 0 && content.Length < 10000)
+                {
+                    recentItems.Insert(0, content); //add to top
+
+                    //limit number of recent items
+                    if (recentItems.Count > 100)
+                    {
+                        recentItems.RemoveAt(recentItems.Count - 1);
+                    }
+                    updateList();
+                }
             }
         }
 
@@ -240,5 +245,70 @@ namespace ClipBoard
             this.Show();
         }
 
+        protected override void WndProc(ref Message m)
+        {
+            switch ((ClipBoard.Program.Msgs)m.Msg)
+            {
+                //
+                // The WM_DRAWCLIPBOARD message is sent to the first window 
+                // in the clipboard viewer chain when the content of the 
+                // clipboard changes. This enables a clipboard viewer 
+                // window to display the new content of the clipboard. 
+                //
+                case ClipBoard.Program.Msgs.WM_DRAWCLIPBOARD:
+
+                    handleClipboardChanged();
+
+                    //
+                    // Each window that receives the WM_DRAWCLIPBOARD message 
+                    // must call the SendMessage function to pass the message 
+                    // on to the next window in the clipboard viewer chain.
+                    //
+                    ClipBoard.Program.SendMessage(_ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
+                    break;
+
+
+                //
+                // The WM_CHANGECBCHAIN message is sent to the first window 
+                // in the clipboard viewer chain when a window is being 
+                // removed from the chain. 
+                //
+                case ClipBoard.Program.Msgs.WM_CHANGECBCHAIN:
+
+                    // When a clipboard viewer window receives the WM_CHANGECBCHAIN message, 
+                    // it should call the SendMessage function to pass the message to the 
+                    // next window in the chain, unless the next window is the window 
+                    // being removed. In this case, the clipboard viewer should save 
+                    // the handle specified by the lParam parameter as the next window in the chain. 
+
+                    //
+                    // wParam is the Handle to the window being removed from 
+                    // the clipboard viewer chain 
+                    // lParam is the Handle to the next window in the chain 
+                    // following the window being removed. 
+                    if (m.WParam == _ClipboardViewerNext)
+                    {
+                        //
+                        // If wParam is the next clipboard viewer then it
+                        // is being removed so update pointer to the next
+                        // window in the clipboard chain
+                        //
+                        _ClipboardViewerNext = m.LParam;
+                    }
+                    else
+                    {
+                        ClipBoard.Program.SendMessage(_ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
+                    }
+                    break;
+
+                default:
+                    //
+                    // Let the form process the messages that we are
+                    // not interested in
+                    //
+                    base.WndProc(ref m);
+                    break;
+            }
+        }
     }
 }

@@ -5,7 +5,7 @@ Cannot find a perfect clipboard manager so I'm writing my own. This
 tool is written with .Net 4.5 and runs on Windows.
 
 The tool monitors system keyboard events and copies **text** from system 
-clipboard when `Ctrl+C` is hit.
+clipboard when a "Copy" is performed.
 
 ###Usage
 
