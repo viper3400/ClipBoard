@@ -200,7 +200,7 @@ namespace ClipBoard
             }
             else if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
-                this.listView_DoubleClick(sender, e);
+                copyTextToClipboardAndPaste();
             }
         }
 
