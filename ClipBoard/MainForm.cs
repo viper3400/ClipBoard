@@ -148,7 +148,20 @@ namespace ClipBoard
             list.Columns[1].Width = this.list.Width - 50;
         }
 
-        private async void listView_DoubleClick(object sender, EventArgs e)
+        private void listView_DoubleClick(object sender, EventArgs e)
+        {
+            copyTextToClipboardAndPaste();
+        }
+ 
+        private void listView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Return)
+            {
+                copyTextToClipboardAndPaste();
+            }
+        }
+ 
+        private async void copyTextToClipboardAndPaste()
         {
             copyTextToClipBoard();
 
