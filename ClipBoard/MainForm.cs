@@ -11,77 +11,113 @@ namespace ClipBoard
     {
         public ListView list;
         private static string contentFileName = "../../content.csv";
-        private List<string> savedItems;
-        private List<string> recentItems;
+        private static int maxCopyTextLength = 10000;
+        private List<ClipBoardRecord> savedItems;
+        private List<ClipBoardRecord> frequentItems;
+        private List<ClipBoardRecord> recentItems;
+        
         public MainForm()
         {
             InitializeComponent();
             list = this.listView;
-            savedItems = new List<string>(10);
-            recentItems = new List<string>(10);
+            savedItems = new List<ClipBoardRecord>(10);
+            recentItems = new List<ClipBoardRecord>(10);
+            frequentItems = new List<ClipBoardRecord>(10);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            list.Columns[1].Width = this.list.Width - 50;
+            list.Columns[3].Width = this.list.Width - 50;
             loadContent(contentFileName);
             updateList();
         }
 
         private void updateList()
         {
-            removeDuplicates();
             list.Items.Clear();
+            ClipBoardRecord mostCoppiedRecord = new ClipBoardRecord();
+            ClipBoardRecord mostPastedRecord = new ClipBoardRecord();
             int i = 1;
-            foreach (string s in savedItems)
+
+            // Add in saved records
+            foreach (ClipBoardRecord s in savedItems)
             {
                 ListViewItem lvi = 
-                    new ListViewItem(new string[] { (i++).ToString(), s });
+                    new ListViewItem(new string[] { (i++).ToString(),
+                                                    s.CoppiedCount.ToString(),
+                                                    s.PastedCount.ToString(),
+                                                    s.Content
+                                                  });
                 list.Items.Add(lvi);
                 list.Groups[0].Items.Add(lvi);
             }
-            foreach (string s in recentItems)
+
+            // Calcualte both the most coppied and most pasted records
+            foreach (ClipBoardRecord s in recentItems)
             {
-                ListViewItem lvi = 
-                    new ListViewItem(new string[] { (i++).ToString(), s });
+                // work out for use later on the most coppied record
+                if (mostCoppiedRecord.CoppiedCount < s.CoppiedCount)
+                {
+                    mostCoppiedRecord = s;
+                }
+                // work out for use later on the most pasted record
+                if (mostPastedRecord.PastedCount < s.PastedCount)
+                {
+                    mostPastedRecord = s;
+                }
+            }
+
+            frequentItems.Clear();
+            if (mostCoppiedRecord.CoppiedCount > 0)
+            {
+                frequentItems.Add(mostCoppiedRecord);
+            }
+            // is mostCoppied is the same as mostPasted then only add one instance
+            if (mostPastedRecord.PastedCount > 0 && mostCoppiedRecord != mostPastedRecord)
+            {
+                frequentItems.Add(mostPastedRecord);
+            }
+            foreach (ClipBoardRecord s in frequentItems)
+            {
+                ListViewItem lvi =
+                    new ListViewItem(new string[] { (i++).ToString(),
+                                                    s.CoppiedCount.ToString(),
+                                                    s.PastedCount.ToString(),
+                                                    s.Content
+                                                  });
+
                 list.Items.Add(lvi);
                 list.Groups[1].Items.Add(lvi);
             }
 
-            //frequently write to csv
+            // finally populate the recent list
+            foreach (ClipBoardRecord s in recentItems)
+            {
+                ListViewItem lvi =
+                    new ListViewItem(new string[] { (i++).ToString(),
+                                                    s.CoppiedCount.ToString(),
+                                                    s.PastedCount.ToString(),
+                                                    s.Content
+                                                  });
+                list.Items.Add(lvi);
+                list.Groups[2].Items.Add(lvi);
+            }
+
+            //save to csv
             writeToCsv();
         }
-
-        private void removeDuplicates()
-        {
-            for (int i = savedItems.Count - 1; i >= 0; i--)
-            {
-                if (savedItems.IndexOf(savedItems[i]) != i)
-                {
-                    savedItems.RemoveAt(i);
-                }
-            }
-            for (int i = recentItems.Count - 1; i >= 0; i--)
-            {
-                if (recentItems.IndexOf(recentItems[i]) != i 
-                    || savedItems.IndexOf(recentItems[i]) >= 0 )
-                {
-                    recentItems.RemoveAt(i);
-                }
-            }
-        }
-
+         
         private void writeToCsv()
         {
             string[] lines = new string[savedItems.Count + Math.Min(recentItems.Count, 30)];
             int i = 0;
-            foreach (string s in savedItems)
+            foreach (ClipBoardRecord s in savedItems)
             {
-                lines[i++] = "saved: " + Regex.Escape(s);
+                lines[i++] = "|," + s.CoppiedCount + "," + s.PastedCount + "," + "saved: " + Regex.Escape(s.Content);
             }
-            foreach (string s in recentItems)
+            foreach (ClipBoardRecord s in recentItems)
             {
-                lines[i++] = "recent:" + Regex.Escape(s);
+                lines[i++] = "|," + s.CoppiedCount + "," + s.PastedCount + "," + "recent:" + Regex.Escape(s.Content);
                 if (i >= savedItems.Count + 30)
                 {
                     break;
@@ -92,16 +128,40 @@ namespace ClipBoard
 
         private void loadContent(string contentFileName)
         {
+            char[] delimiterChars = { ',' };
+            string[] fileFields;
             string[] lines = File.ReadAllLines(contentFileName);
+            string type;
+
             foreach (string s in lines)
             {
-                if (s.StartsWith("saved:"))
+                ClipBoardRecord rec = new ClipBoardRecord();
+
+                // Find out if we have a saved file containing counts
+                if (s.StartsWith("|")) // then new file format 
                 {
-                    savedItems.Add(Regex.Unescape(s.Substring(7)));
+                    fileFields = s.Split(delimiterChars, 4);
+                    rec.CoppiedCount = int.Parse(fileFields[1]);
+                    rec.PastedCount = int.Parse(fileFields[2]);
+                    rec.Content = Regex.Unescape(fileFields[3].Substring(7));
+                    type = fileFields[3].Substring(0, 7);
                 }
-                else if (s.StartsWith("recent:"))
+                else // handle previous file format
                 {
-                    recentItems.Add(Regex.Unescape(s.Substring(7)));
+                    rec.Content = Regex.Unescape(s.Substring(7));
+                    rec.CoppiedCount = 0;
+                    rec.PastedCount = 0;
+                    type = s.Substring(0, 7);
+                }
+
+                // now have have the data add it to the relevent list
+                if (type.StartsWith("saved:"))
+                {
+                    savedItems.Add(rec);
+                }
+                else if (type.StartsWith("recent:"))
+                {
+                    recentItems.Add(rec);
                 }
             }
         }
@@ -112,40 +172,83 @@ namespace ClipBoard
             if ((ModifierKeys & Keys.Control) == Keys.Control && keys == Keys.C)
             {
                 await Task.Delay(3000);
-                string content = Clipboard.GetText();
-                if (content.Length != 0)
-                {
-                    //accept content only of not empty and not too big
-                    if (recentItems.Count != 0 && content.Length < 10000)
-                    {
-                        recentItems.Insert(0, content); //add to top
-
-                        //limit number of recent items
-                        if (recentItems.Count > 100)
-                        {
-                            recentItems.RemoveAt(recentItems.Count - 1);
-                        }
-                        updateList();
-                    }
-                }
+                addClipBoardRecord(Clipboard.GetText());
             }
 
             //control-` pressed
             if ((ModifierKeys & Keys.Control) == Keys.Control && keys == Keys.Oemtilde)
             {
-                notifyIcon.Visible = false;
-                this.Show();
-                this.WindowState = FormWindowState.Normal;
+                showScreen();
+            }
 
-                //bring to front if not
-                this.TopMost = true;
-                this.TopMost = false;
+            //control-p pressed
+            if ((ModifierKeys & Keys.Control) == Keys.Control && keys == Keys.V)
+            {
+                recordPaste();
+            }
+        }
+
+        // Add either new record or increment existing record counter
+        private void addClipBoardRecord(string content)
+        {
+            ClipBoardRecord rec;
+
+            //accept content only of not empty and not too big
+            if (content.Length != 0 && content.Length < maxCopyTextLength)
+            {
+                rec = getClipBoardRecordViaContent(content);
+
+                if (rec == null) // this is a new content
+                {
+                    // add a new record to the list
+                    rec = new ClipBoardRecord(content, 1, 0);
+                    recentItems.Insert(0, rec);
+                }
+                else
+                {
+                    // increment the existing matching record
+                    rec.CoppiedCount++;
+                }
+
+                //limit number of recent items
+                if (recentItems.Count > 100)
+                {
+                    recentItems.RemoveAt(recentItems.Count - 1);
+                }
+                updateList();
+            }
+        }
+
+        // code so show list screen
+        private void showScreen()
+        {
+            notifyIcon.Visible = false;
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+
+            //bring to front if not
+            this.TopMost = true;
+            this.TopMost = false;
+        }
+
+        // increment the pasted counter for current clipboard content
+        private void recordPaste()
+        {            
+            ClipBoardRecord clipBoardRecord;
+            if (Clipboard.ContainsText() && Clipboard.GetText().Length < maxCopyTextLength)
+            {
+                clipBoardRecord = getClipBoardRecordViaContent(Clipboard.GetText());
+                if (clipBoardRecord != null)
+                {
+                    clipBoardRecord.PastedCount++;
+                    updateList();
+                }
             }
         }
 
         private void MainForm_SizeChanged(object sender, EventArgs e)
         {
-            list.Columns[1].Width = this.list.Width - 50;
+            list.Columns[3].Width = this.list.Width - 50;
         }
 
         private async void listView_DoubleClick(object sender, EventArgs e)
@@ -165,9 +268,25 @@ namespace ClipBoard
             if (this.list.SelectedIndices.Count > 0)
             {
                 int index = this.list.SelectedIndices[0];
-                string content = this.list.Items[index].SubItems[1].Text;
+                string content = this.list.Items[index].SubItems[3].Text;
+                incrementPasted(content);
                 Clipboard.SetText(content);
             }
+        }
+
+        private void incrementPasted(string content)
+        {
+            foreach (ClipBoardRecord s in savedItems)
+            {
+                if (s.Content == content)
+                    s.PastedCount++;
+            }
+            foreach (ClipBoardRecord s in recentItems)
+            {
+                if(s.Content == content)
+                    s.PastedCount++;
+            }
+            updateList();
         }
 
         private void listView_MouseClick(object sender, MouseEventArgs e)
@@ -193,24 +312,43 @@ namespace ClipBoard
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int index = list.SelectedIndices[0] - list.Groups[0].Items.Count;
-            savedItems.Add(recentItems[index]);
+            ClipBoardRecord rec;
+            rec = getClipBoardRecordViaContent(list.Items[list.SelectedIndices[0]].SubItems[3].Text);
+            savedItems.Add(rec);
+            recentItems.Remove(rec);
             updateList();
         }
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (list.SelectedItems[0].Group.Equals(list.Groups[0])) // in Saved Group
-            {
-                int index = list.SelectedIndices[0];
-                savedItems.RemoveAt(index);
-            }
-            else // in Recent group
-            {
-                int index = list.SelectedIndices[0] - list.Groups[0].Items.Count;
-                recentItems.RemoveAt(index);
-            }
+            removeClipBoardRecordViaContent(list.SelectedItems[0].SubItems[3].Text);            
             updateList();
+        }
+
+        // Given a content this function will remove a clipboard 
+        // record if it exists in either the saved or recent list
+        private void removeClipBoardRecordViaContent(string content)
+        {
+            // if ti exists it will only be in one list. 
+            // so its safe to try and remove from both.
+            savedItems.Remove(getClipBoardRecordViaContent(content));
+            recentItems.Remove(getClipBoardRecordViaContent(content));
+        }
+
+        private ClipBoardRecord getClipBoardRecordViaContent(string content)
+        {
+            ClipBoardRecord foundRecord = null;
+            foreach (ClipBoardRecord rec in savedItems)
+            {
+                if (rec.Content == content)
+                    foundRecord = rec;
+            }
+            foreach (ClipBoardRecord rec in recentItems)
+            {
+                if (rec.Content == content)
+                    foundRecord = rec;
+            }
+            return foundRecord;
         }
 
         private void MainForm_Resize(object sender, EventArgs e)
