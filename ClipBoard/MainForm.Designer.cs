@@ -78,6 +78,7 @@
             this.listView.View = System.Windows.Forms.View.Details;
             this.listView.DoubleClick += new System.EventHandler(this.listView_DoubleClick);
             this.listView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView_MouseClick);
+            this.listView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView_KeyDown);
             // 
             // indexColumnHeader
             // 
