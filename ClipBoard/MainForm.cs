@@ -15,7 +15,9 @@ namespace ClipBoard
         private List<ClipBoardRecord> savedItems;
         private List<ClipBoardRecord> frequentItems;
         private List<ClipBoardRecord> recentItems;
-        
+        private bool allowSaveAsNowLoaded = false;
+        IntPtr _ClipboardViewerNext;        
+
         public MainForm()
         {
             InitializeComponent();
@@ -23,6 +25,7 @@ namespace ClipBoard
             savedItems = new List<ClipBoardRecord>(10);
             recentItems = new List<ClipBoardRecord>(10);
             frequentItems = new List<ClipBoardRecord>(10);
+            _ClipboardViewerNext = ClipBoard.Program.SetClipboardViewer(this.Handle);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -30,6 +33,12 @@ namespace ClipBoard
             list.Columns[3].Width = this.list.Width - 50;
             loadContent(contentFileName);
             updateList();
+            allowSaveAsNowLoaded = true;
+        }
+
+        private void MainForm_FormClosing(Object sender, FormClosingEventArgs e)
+        {
+            ClipBoard.Program.ChangeClipboardChain(this.Handle, _ClipboardViewerNext);
         }
 
         private void updateList()
@@ -106,24 +115,28 @@ namespace ClipBoard
             //save to csv
             writeToCsv();
         }
-         
+
         private void writeToCsv()
         {
-            string[] lines = new string[savedItems.Count + Math.Min(recentItems.Count, 30)];
-            int i = 0;
-            foreach (ClipBoardRecord s in savedItems)
+            // this function is a candadiate for error handling
+            if (allowSaveAsNowLoaded)
             {
-                lines[i++] = "|," + s.CoppiedCount + "," + s.PastedCount + "," + "saved: " + Regex.Escape(s.Content);
-            }
-            foreach (ClipBoardRecord s in recentItems)
-            {
-                lines[i++] = "|," + s.CoppiedCount + "," + s.PastedCount + "," + "recent:" + Regex.Escape(s.Content);
-                if (i >= savedItems.Count + 30)
+                string[] lines = new string[savedItems.Count + Math.Min(recentItems.Count, 30)];
+                int i = 0;
+                foreach (ClipBoardRecord s in savedItems)
                 {
-                    break;
+                    lines[i++] = "|," + s.CoppiedCount + "," + s.PastedCount + "," + "saved: " + Regex.Escape(s.Content);
                 }
-            }
-            File.WriteAllLines(contentFileName, lines);
+                foreach (ClipBoardRecord s in recentItems)
+                {
+                    lines[i++] = "|," + s.CoppiedCount + "," + s.PastedCount + "," + "recent:" + Regex.Escape(s.Content);
+                    if (i >= savedItems.Count + 30)
+                    {
+                        break;
+                    }
+                }
+                File.WriteAllLines(contentFileName, lines);
+            }        
         }
 
         private void loadContent(string contentFileName)
@@ -166,15 +179,8 @@ namespace ClipBoard
             }
         }
 
-        public async void keyPressedHandler(Keys keys)
+        public void keyPressedHandler(Keys keys)
         {
-            //control-c pressed
-            if ((ModifierKeys & Keys.Control) == Keys.Control && keys == Keys.C)
-            {
-                await Task.Delay(3000);
-                addClipBoardRecord(Clipboard.GetText());
-            }
-
             //control-` pressed
             if ((ModifierKeys & Keys.Control) == Keys.Control && keys == Keys.Oemtilde)
             {
@@ -246,6 +252,12 @@ namespace ClipBoard
             }
         }
 
+        private void handleClipboardChanged()
+        {
+
+            addClipBoardRecord(Clipboard.GetText());
+        }
+
         private void MainForm_SizeChanged(object sender, EventArgs e)
         {
             list.Columns[3].Width = this.list.Width - 50;
@@ -255,7 +267,7 @@ namespace ClipBoard
         {
             copyTextToClipboardAndPaste();
         }
- 
+
         private void listView_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
@@ -263,7 +275,7 @@ namespace ClipBoard
                 copyTextToClipboardAndPaste();
             }
         }
- 
+
         private async void copyTextToClipboardAndPaste()
         {
             copyTextToClipBoard();
@@ -391,5 +403,70 @@ namespace ClipBoard
             this.Show();
         }
 
+        protected override void WndProc(ref Message m)
+        {
+            switch ((ClipBoard.Program.Msgs)m.Msg)
+            {
+                //
+                // The WM_DRAWCLIPBOARD message is sent to the first window 
+                // in the clipboard viewer chain when the content of the 
+                // clipboard changes. This enables a clipboard viewer 
+                // window to display the new content of the clipboard. 
+                //
+                case ClipBoard.Program.Msgs.WM_DRAWCLIPBOARD:
+
+                    handleClipboardChanged();
+
+                    //
+                    // Each window that receives the WM_DRAWCLIPBOARD message 
+                    // must call the SendMessage function to pass the message 
+                    // on to the next window in the clipboard viewer chain.
+                    //
+                    ClipBoard.Program.SendMessage(_ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
+                    break;
+
+
+                //
+                // The WM_CHANGECBCHAIN message is sent to the first window 
+                // in the clipboard viewer chain when a window is being 
+                // removed from the chain. 
+                //
+                case ClipBoard.Program.Msgs.WM_CHANGECBCHAIN:
+
+                    // When a clipboard viewer window receives the WM_CHANGECBCHAIN message, 
+                    // it should call the SendMessage function to pass the message to the 
+                    // next window in the chain, unless the next window is the window 
+                    // being removed. In this case, the clipboard viewer should save 
+                    // the handle specified by the lParam parameter as the next window in the chain. 
+
+                    //
+                    // wParam is the Handle to the window being removed from 
+                    // the clipboard viewer chain 
+                    // lParam is the Handle to the next window in the chain 
+                    // following the window being removed. 
+                    if (m.WParam == _ClipboardViewerNext)
+                    {
+                        //
+                        // If wParam is the next clipboard viewer then it
+                        // is being removed so update pointer to the next
+                        // window in the clipboard chain
+                        //
+                        _ClipboardViewerNext = m.LParam;
+                    }
+                    else
+                    {
+                        ClipBoard.Program.SendMessage(_ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
+                    }
+                    break;
+
+                default:
+                    //
+                    // Let the form process the messages that we are
+                    // not interested in
+                    //
+                    base.WndProc(ref m);
+                    break;
+            }
+        }
     }
 }
