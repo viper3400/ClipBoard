@@ -181,14 +181,15 @@ namespace ClipBoard
 
         public void keyPressedHandler(Keys keys)
         {
-            //control-` pressed
-            if ((ModifierKeys & Keys.Control) == Keys.Control && keys == Keys.Oemtilde)
+            Keys ModKeys = ModifierKeys; // save locally to aid debugging
+            //control-` pressed or control-shift-b
+            if ((ModKeys & Keys.Control) == Keys.Control && (keys == Keys.Oemtilde || keys == Keys.B))
             {
                 showScreen();
             }
 
-            //control-p pressed
-            if ((ModifierKeys & Keys.Control) == Keys.Control && keys == Keys.V)
+            //control-v pressed
+            if ((ModKeys & Keys.Control) == Keys.Control && keys == Keys.V)
             {
                 recordPaste();
             }
