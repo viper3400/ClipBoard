@@ -1,4 +1,6 @@
-﻿namespace ClipBoard
+﻿using System;
+
+namespace ClipBoard
 {
     partial class MainForm
     {
@@ -69,16 +71,18 @@
             listViewGroup1,
             listViewGroup2,
             listViewGroup3});
+            this.listView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.listView.Location = new System.Drawing.Point(12, 12);
             this.listView.MultiSelect = false;
             this.listView.Name = "listView";
+            this.listView.Scrollable = false;
             this.listView.Size = new System.Drawing.Size(260, 775);
             this.listView.TabIndex = 0;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.Details;
             this.listView.DoubleClick += new System.EventHandler(this.listView_DoubleClick);
-            this.listView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView_MouseClick);
             this.listView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView_KeyDown);
+            this.listView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView_MouseClick);
             // 
             // indexColumnHeader
             // 
@@ -137,10 +141,11 @@
             this.ClientSize = new System.Drawing.Size(284, 799);
             this.Controls.Add(this.listView);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "MainForm";
+            this.Opacity = 0.96D;
             this.Text = "ClipBoard Manager";
             this.Load += new System.EventHandler(this.MainForm_Load);
-            this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
             this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);

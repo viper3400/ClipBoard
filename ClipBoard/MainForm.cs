@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,12 +17,24 @@ namespace ClipBoard
         private List<ClipBoardRecord> frequentItems;
         private List<ClipBoardRecord> recentItems;
         private bool allowSaveAsNowLoaded = false;
-        IntPtr _ClipboardViewerNext;        
+        IntPtr _ClipboardViewerNext;
+
+        [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+        private static extern IntPtr CreateRoundRectRgn
+        (
+            int nLeftRect, // x-coordinate of upper-left corner
+            int nTopRect, // y-coordinate of upper-left corner
+            int nRightRect, // x-coordinate of lower-right corner
+            int nBottomRect, // y-coordinate of lower-right corner
+            int nWidthEllipse, // height of ellipse
+            int nHeightEllipse // width of ellipse
+         );
 
         public MainForm()
         {
             InitializeComponent();
             list = this.listView;
+            this.FormBorderStyle = FormBorderStyle.None;
             savedItems = new List<ClipBoardRecord>(10);
             recentItems = new List<ClipBoardRecord>(10);
             frequentItems = new List<ClipBoardRecord>(10);
@@ -30,6 +43,7 @@ namespace ClipBoard
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            list.TileSize = System.Drawing.Size.Empty;
             list.Columns[3].Width = this.list.Width - 50;
             loadContent(contentFileName);
             updateList();
@@ -114,6 +128,9 @@ namespace ClipBoard
 
             //save to csv
             writeToCsv();
+
+            //resize the form to fit the number of items
+            resizeForm();
         }
 
         private void writeToCsv()
@@ -137,6 +154,20 @@ namespace ClipBoard
                 }
                 File.WriteAllLines(contentFileName, lines);
             }        
+        }
+
+        /// <summary>
+        ///  Function to resize the heigh of this WinForm based on the number of itmes in the lists
+        /// </summary>
+        private void resizeForm()
+        {
+            this.Height = (listView.Items.Count * listView.Items[0].Bounds.Height)
+                                + (listView.Groups.Count * listView.GetItemRect(0).Height)
+                                + ((listView.Items.Count) + 25);
+            //this.Height = listView.Height + 5;
+            //listView.Width = listView.Width; //260
+            Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
+
         }
 
         private void loadContent(string contentFileName)
@@ -236,6 +267,8 @@ namespace ClipBoard
             //bring to front if not
             this.TopMost = true;
             this.TopMost = false;
+
+            resizeForm();
         }
 
         // increment the pasted counter for current clipboard content
@@ -259,11 +292,6 @@ namespace ClipBoard
             addClipBoardRecord(Clipboard.GetText());
         }
 
-        private void MainForm_SizeChanged(object sender, EventArgs e)
-        {
-            list.Columns[3].Width = this.list.Width - 50;
-        }
-
         private void listView_DoubleClick(object sender, EventArgs e)
         {
             copyTextToClipboardAndPaste();
@@ -274,6 +302,11 @@ namespace ClipBoard
             if (e.KeyCode == Keys.Return)
             {
                 copyTextToClipboardAndPaste();
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                //hide after text copied to clipboard
+                this.WindowState = FormWindowState.Minimized;
             }
         }
 
@@ -406,6 +439,7 @@ namespace ClipBoard
 
         protected override void WndProc(ref Message m)
         {
+
             switch ((ClipBoard.Program.Msgs)m.Msg)
             {
                 //
@@ -459,6 +493,23 @@ namespace ClipBoard
                         ClipBoard.Program.SendMessage(_ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
                     }
                     break;
+
+                /*
+                Constants in Windows API
+                0x1 = HTCLIENT - Application Client Area
+                0x2 = HTCAPTION - Application Title Bar
+
+                This function intercepts all the commands sent to the application. 
+                It checks to see of the message is a mouse click in the application. 
+                It passes the action to the base action by default. It reassigns 
+                the action to the title bar if it occured in the client area
+                to allow the drag and move behavior.
+                */
+                case ClipBoard.Program.Msgs.WM_NCHITTEST:
+                    base.WndProc(ref m);
+                    if ((int)m.Result == 0x1)
+                        m.Result = (IntPtr)0x2;
+                    return;
 
                 default:
                     //
