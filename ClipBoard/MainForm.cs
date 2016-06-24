@@ -38,13 +38,14 @@ namespace ClipBoard
             savedItems = new List<ClipBoardRecord>(10);
             recentItems = new List<ClipBoardRecord>(10);
             frequentItems = new List<ClipBoardRecord>(10);
+            this.MouseDown += new MouseEventHandler(Form_MouseDown);
+            this.labelClipBoardManager.MouseDown += new MouseEventHandler(Form_MouseDown);
             _ClipboardViewerNext = ClipBoard.Program.SetClipboardViewer(this.Handle);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
             list.TileSize = System.Drawing.Size.Empty;
-            list.Columns[3].Width = this.list.Width - 50;
             loadContent(contentFileName);
             updateList();
             allowSaveAsNowLoaded = true;
@@ -164,9 +165,9 @@ namespace ClipBoard
             this.Height = (listView.Items.Count * listView.Items[0].Bounds.Height)
                                 + (listView.Groups.Count * listView.GetItemRect(0).Height)
                                 + ((listView.Items.Count) + 25);
-            //this.Height = listView.Height + 5;
-            //listView.Width = listView.Width; //260
+
             Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
+            linkLabelGitHub.Top = listView.Top + listView.Height + 5;
 
         }
 
@@ -249,7 +250,7 @@ namespace ClipBoard
                 }
 
                 //limit number of recent items
-                if (recentItems.Count > 100)
+                if (recentItems.Count > 25)
                 {
                     recentItems.RemoveAt(recentItems.Count - 1);
                 }
@@ -269,6 +270,11 @@ namespace ClipBoard
             this.TopMost = false;
 
             resizeForm();
+        }
+
+        private void hideScreen()
+        {
+            this.WindowState = FormWindowState.Minimized;
         }
 
         // increment the pasted counter for current clipboard content
@@ -306,7 +312,7 @@ namespace ClipBoard
             else if (e.KeyCode == Keys.Escape)
             {
                 //hide after text copied to clipboard
-                this.WindowState = FormWindowState.Minimized;
+                hideScreen();
             }
         }
 
@@ -315,7 +321,7 @@ namespace ClipBoard
             copyTextToClipBoard();
 
             //hide after text copied to clipboard
-            this.WindowState = FormWindowState.Minimized;
+            hideScreen();
 
             // paste to curreMonkey talk font cursor
             await Task.Delay(500);
@@ -437,6 +443,19 @@ namespace ClipBoard
             this.Show();
         }
 
+
+        private void Form_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                /*
+                Constants in Windows API
+                0x2 = HTCAPTION - Application Title Bar
+                */
+                ClipBoard.Program.ReleaseCapture();
+                ClipBoard.Program.SendMessage(Handle, (int)ClipBoard.Program.Msgs.WM_NCLBUTTONDOWN, (IntPtr)0x2, (IntPtr)0);
+            }
+        }
         protected override void WndProc(ref Message m)
         {
 
@@ -494,23 +513,6 @@ namespace ClipBoard
                     }
                     break;
 
-                /*
-                Constants in Windows API
-                0x1 = HTCLIENT - Application Client Area
-                0x2 = HTCAPTION - Application Title Bar
-
-                This function intercepts all the commands sent to the application. 
-                It checks to see of the message is a mouse click in the application. 
-                It passes the action to the base action by default. It reassigns 
-                the action to the title bar if it occured in the client area
-                to allow the drag and move behavior.
-                */
-                case ClipBoard.Program.Msgs.WM_NCHITTEST:
-                    base.WndProc(ref m);
-                    if ((int)m.Result == 0x1)
-                        m.Result = (IntPtr)0x2;
-                    return;
-
                 default:
                     //
                     // Let the form process the messages that we are
@@ -519,6 +521,16 @@ namespace ClipBoard
                     base.WndProc(ref m);
                     break;
             }
+        }
+
+        private void labelMinimize_Click(object sender, EventArgs e)
+        {
+            hideScreen();
+        }
+
+        private void linkLabelGitHub_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(linkLabelGitHub.Text);
         }
     }
 }
