@@ -215,7 +215,7 @@ namespace ClipBoard
         {
             Keys ModKeys = ModifierKeys; // save locally to aid debugging
             //control-` pressed or control-shift-b
-            if ((ModKeys & Keys.Control) == Keys.Control && (keys == Keys.Oemtilde || keys == Keys.B))
+            if ((ModKeys & Keys.Control) == Keys.Control && (keys == Keys.Oemtilde || keys == Keys.Space))
             {
                 showScreen();
             }

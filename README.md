@@ -13,10 +13,10 @@ clipboard when a "Copy" is performed.
 - Right click an item to save it to the frequently used items list on the top
 - Right click and click remove to remove the selected item
 - Minimize to hide the tool to system tray
-- ``Ctrl+```(ctrl+backtick) or Ctrl+b to bring the tool up
+- ``Ctrl+```(ctrl+backtick) or Ctrl+Space to bring the tool up
 - Clicking on an item also hide the tool to system tray
 
 
-![screenshot](https://raw.githubusercontent.com/yadongwen/ClipBoard/master/Screenshot/2014-05-16%2000_19_52-yadongwen_ClipBoard.png)
+![screenshot](https://raw.githubusercontent.com/MrCull/ClipBoard/base/Screenshot/ClipBoard.png)
 
 ###Enjoy!
