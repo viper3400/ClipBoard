@@ -29,11 +29,14 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("Saved", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("Recent", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Saved", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Frequent", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Recent", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.listView = new System.Windows.Forms.ListView();
             this.indexColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.countCoppiedColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.countPastedColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.textColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -50,17 +53,22 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.indexColumnHeader,
+            this.countCoppiedColumnHeader,
+            this.countPastedColumnHeader,
             this.textColumnHeader});
             this.listView.ForeColor = System.Drawing.Color.Green;
             this.listView.FullRowSelect = true;
             this.listView.GridLines = true;
-            listViewGroup5.Header = "Saved";
-            listViewGroup5.Name = "savedListViewGroup";
-            listViewGroup6.Header = "Recent";
-            listViewGroup6.Name = "recentListViewGroup";
+            listViewGroup1.Header = "Saved";
+            listViewGroup1.Name = "savedListViewGroup";
+            listViewGroup2.Header = "Frequent";
+            listViewGroup2.Name = "frequentListViewGroup";
+            listViewGroup3.Header = "Recent";
+            listViewGroup3.Name = "recentListViewGroup";
             this.listView.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup5,
-            listViewGroup6});
+            listViewGroup1,
+            listViewGroup2,
+            listViewGroup3});
             this.listView.Location = new System.Drawing.Point(12, 12);
             this.listView.MultiSelect = false;
             this.listView.Name = "listView";
@@ -70,11 +78,22 @@
             this.listView.View = System.Windows.Forms.View.Details;
             this.listView.DoubleClick += new System.EventHandler(this.listView_DoubleClick);
             this.listView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView_MouseClick);
+            this.listView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView_KeyDown);
             // 
             // indexColumnHeader
             // 
             this.indexColumnHeader.Text = "Index";
             this.indexColumnHeader.Width = 40;
+            // 
+            // countCoppiedColumnHeader
+            // 
+            this.countCoppiedColumnHeader.Text = "Copy Count";
+            this.countCoppiedColumnHeader.Width = 0;
+            // 
+            // countPastedColumnHeader
+            // 
+            this.countPastedColumnHeader.Text = "Paste Count";
+            this.countPastedColumnHeader.Width = 0;
             // 
             // textColumnHeader
             // 
@@ -117,6 +136,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 799);
             this.Controls.Add(this.listView);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "ClipBoard Manager";
             this.Load += new System.EventHandler(this.MainForm_Load);
@@ -137,8 +157,8 @@
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
         private System.Windows.Forms.NotifyIcon notifyIcon;
-
-
+        private System.Windows.Forms.ColumnHeader countCoppiedColumnHeader;
+        private System.Windows.Forms.ColumnHeader countPastedColumnHeader;
     }
 }
 

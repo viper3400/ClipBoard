@@ -5,7 +5,7 @@ Cannot find a perfect clipboard manager so I'm writing my own. This
 tool is written with .Net 4.5 and runs on Windows.
 
 The tool monitors system keyboard events and copies **text** from system 
-clipboard when `Ctrl+C` is hit.
+clipboard when a "Copy" is performed.
 
 ###Usage
 
@@ -13,7 +13,7 @@ clipboard when `Ctrl+C` is hit.
 - Right click an item to save it to the frequently used items list on the top
 - Right click and click remove to remove the selected item
 - Minimize to hide the tool to system tray
-- ``Ctrl+```(ctrl+backtick) to bring the tool up
+- ``Ctrl+```(ctrl+backtick) or Ctrl+b to bring the tool up
 - Clicking on an item also hide the tool to system tray
 
 
