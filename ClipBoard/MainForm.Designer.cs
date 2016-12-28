@@ -1,4 +1,6 @@
-﻿namespace ClipBoard
+﻿using System;
+
+namespace ClipBoard
 {
     partial class MainForm
     {
@@ -43,6 +45,9 @@
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.labelClipBoardManager = new System.Windows.Forms.Label();
+            this.linkLabelGitHub = new System.Windows.Forms.LinkLabel();
+            this.labelMinimize = new System.Windows.Forms.Label();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,12 +56,13 @@
             this.listView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.listView.BackColor = System.Drawing.Color.WhiteSmoke;
             this.listView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.indexColumnHeader,
             this.countCoppiedColumnHeader,
             this.countPastedColumnHeader,
             this.textColumnHeader});
-            this.listView.ForeColor = System.Drawing.Color.Green;
+            this.listView.ForeColor = System.Drawing.Color.Black;
             this.listView.FullRowSelect = true;
             this.listView.GridLines = true;
             listViewGroup1.Header = "Saved";
@@ -69,21 +75,23 @@
             listViewGroup1,
             listViewGroup2,
             listViewGroup3});
-            this.listView.Location = new System.Drawing.Point(12, 12);
+            this.listView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listView.Location = new System.Drawing.Point(9, 46);
             this.listView.MultiSelect = false;
             this.listView.Name = "listView";
-            this.listView.Size = new System.Drawing.Size(260, 775);
+            this.listView.Scrollable = false;
+            this.listView.Size = new System.Drawing.Size(265, 276);
             this.listView.TabIndex = 0;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.Details;
             this.listView.DoubleClick += new System.EventHandler(this.listView_DoubleClick);
-            this.listView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView_MouseClick);
             this.listView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView_KeyDown);
+            this.listView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView_MouseClick);
             // 
             // indexColumnHeader
             // 
             this.indexColumnHeader.Text = "Index";
-            this.indexColumnHeader.Width = 40;
+            this.indexColumnHeader.Width = 20;
             // 
             // countCoppiedColumnHeader
             // 
@@ -98,7 +106,7 @@
             // textColumnHeader
             // 
             this.textColumnHeader.Text = "Content";
-            this.textColumnHeader.Width = 600;
+            this.textColumnHeader.Width = 242;
             // 
             // contextMenuStrip
             // 
@@ -130,20 +138,62 @@
             this.notifyIcon.Click += new System.EventHandler(this.notifyIcon_Click);
             this.notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseClick);
             // 
+            // labelClipBoardManager
+            // 
+            this.labelClipBoardManager.Font = new System.Drawing.Font("Trebuchet MS", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelClipBoardManager.ForeColor = System.Drawing.Color.White;
+            this.labelClipBoardManager.Location = new System.Drawing.Point(3, 9);
+            this.labelClipBoardManager.Name = "labelClipBoardManager";
+            this.labelClipBoardManager.Size = new System.Drawing.Size(269, 34);
+            this.labelClipBoardManager.TabIndex = 1;
+            this.labelClipBoardManager.Text = "ClipBoard Manager";
+            this.labelClipBoardManager.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // linkLabelGitHub
+            // 
+            this.linkLabelGitHub.AutoSize = true;
+            this.linkLabelGitHub.LinkColor = System.Drawing.Color.White;
+            this.linkLabelGitHub.Location = new System.Drawing.Point(43, 335);
+            this.linkLabelGitHub.Name = "linkLabelGitHub";
+            this.linkLabelGitHub.Size = new System.Drawing.Size(184, 13);
+            this.linkLabelGitHub.TabIndex = 2;
+            this.linkLabelGitHub.TabStop = true;
+            this.linkLabelGitHub.Text = "https://github.com/ralphite/ClipBoard";
+            this.linkLabelGitHub.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelGitHub_LinkClicked);
+            // 
+            // labelMinimize
+            // 
+            this.labelMinimize.AutoSize = true;
+            this.labelMinimize.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelMinimize.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelMinimize.Location = new System.Drawing.Point(256, -1);
+            this.labelMinimize.Name = "labelMinimize";
+            this.labelMinimize.Size = new System.Drawing.Size(18, 26);
+            this.labelMinimize.TabIndex = 3;
+            this.labelMinimize.Text = "-";
+            this.labelMinimize.Click += new System.EventHandler(this.labelMinimize_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 799);
+            this.BackColor = System.Drawing.Color.DodgerBlue;
+            this.ClientSize = new System.Drawing.Size(284, 347);
+            this.Controls.Add(this.labelMinimize);
+            this.Controls.Add(this.linkLabelGitHub);
+            this.Controls.Add(this.labelClipBoardManager);
             this.Controls.Add(this.listView);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "MainForm";
+            this.Opacity = 0.96D;
             this.Text = "ClipBoard Manager";
             this.Load += new System.EventHandler(this.MainForm_Load);
-            this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
             this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -159,6 +209,9 @@
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Windows.Forms.ColumnHeader countCoppiedColumnHeader;
         private System.Windows.Forms.ColumnHeader countPastedColumnHeader;
+        private System.Windows.Forms.Label labelClipBoardManager;
+        private System.Windows.Forms.LinkLabel linkLabelGitHub;
+        private System.Windows.Forms.Label labelMinimize;
     }
 }
 

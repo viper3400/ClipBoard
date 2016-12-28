@@ -11,8 +11,8 @@ namespace ClipBoard
 {
     static class Program
     {
+        private const int HTCAPTION = 0x2;
         private const int WH_KEYBOARD_LL = 13;
-        private const int WM_KEYDOWN = 0x0100;
         private static LowLevelKeyboardProc _proc = HookCallback;
         private static IntPtr _hookID = IntPtr.Zero;
         private static MainForm mf;
@@ -47,7 +47,7 @@ namespace ClipBoard
         private static IntPtr HookCallback(
         int nCode, IntPtr wParam, IntPtr lParam)
         {
-            if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN)
+            if (nCode >= 0 && wParam == (IntPtr)Msgs.WM_KEYDOWN)
             {
                 int vkCode = Marshal.ReadInt32(lParam);
                 Keys keys = (Keys)vkCode;
@@ -73,6 +73,9 @@ namespace ClipBoard
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern int SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("User32.dll")]
+        public static extern bool ReleaseCapture();
 
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
         public static extern bool ChangeClipboardChain(
