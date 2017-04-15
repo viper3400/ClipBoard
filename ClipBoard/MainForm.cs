@@ -166,7 +166,7 @@ namespace ClipBoard
         {
             this.Height = (listView.Items.Count * listView.Items[0].Bounds.Height)
                                 + (listView.Groups.Count * listView.GetItemRect(0).Height)
-                                + ((listView.Items.Count) + 25);
+                                + ((listView.Items.Count) + 100);
 
             Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
             linkLabelGitHub.Top = listView.Top + listView.Height + 5;
