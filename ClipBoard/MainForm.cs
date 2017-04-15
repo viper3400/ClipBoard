@@ -13,7 +13,7 @@ namespace ClipBoard
     public partial class MainForm : Form
     {
         public ListView list;
-        private static string contentFileName = "content.csv";
+        private static string contentFileName = Program.ContentFileName;
         private static int maxCopyTextLength = 10000;
         private List<ClipBoardRecord> savedItems;
         private List<ClipBoardRecord> frequentItems;
@@ -155,6 +155,12 @@ namespace ClipBoard
                         break;
                     }
                 }
+
+                if (!Directory.Exists(Path.GetDirectoryName(contentFileName)))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(contentFileName));
+                }
+
                 File.WriteAllLines(contentFileName, lines);
             }        
         }
