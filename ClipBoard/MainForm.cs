@@ -13,7 +13,7 @@ namespace ClipBoard
     public partial class MainForm : Form
     {
         public ListView list;
-        private static string contentFileName = "../../content.csv";
+        private static string contentFileName = "content.csv";
         private static int maxCopyTextLength = 10000;
         private List<ClipBoardRecord> savedItems;
         private List<ClipBoardRecord> frequentItems;
@@ -176,8 +176,8 @@ namespace ClipBoard
         private void loadContent(string contentFileName)
         {
             char[] delimiterChars = { ',' };
-            string[] fileFields;
-            string[] lines = File.ReadAllLines(contentFileName);
+            string[] fileFields;           
+            string[] lines = File.Exists(contentFileName) ? File.ReadAllLines(contentFileName) : new string[] { };
             string type;
 
             foreach (string s in lines)
