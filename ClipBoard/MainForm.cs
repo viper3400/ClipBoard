@@ -5,6 +5,8 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WindowsInput;
+using WindowsInput.Native;
 
 namespace ClipBoard
 {
@@ -325,7 +327,8 @@ namespace ClipBoard
 
             // paste to curreMonkey talk font cursor
             await Task.Delay(500);
-            SendKeys.Send("^V");
+            var inputSimulator = new InputSimulator();
+            inputSimulator.Keyboard.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_V);            
         }
 
         private void copyTextToClipBoard()
