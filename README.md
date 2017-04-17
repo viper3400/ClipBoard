@@ -1,6 +1,8 @@
 ClipBoard
 =========
 
+[![](https://img.shields.io/github/downloads/ralphite/ClipBoard/total.svg)](https://github.com/ralphite/ClipBoard/releases)
+
 Cannot find a perfect clipboard manager so I'm writing my own. This 
 tool is written with .Net 4.5 and runs on Windows.
 
