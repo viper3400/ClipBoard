@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace ClipBoard
         private static LowLevelKeyboardProc _proc = HookCallback;
         private static IntPtr _hookID = IntPtr.Zero;
         private static MainForm mf;
+        public static string ContentFileName;
 
         /// <summary>
         /// The main entry point for the application.
@@ -23,6 +25,12 @@ namespace ClipBoard
         [STAThread]
         static void Main()
         {
+            // check if a content file has been provided in command line,
+            // otherwise set its name to the users %APDDATA% 
+            var commandLineArgs = Environment.GetCommandLineArgs();
+            ContentFileName = commandLineArgs.Length > 1 ? 
+                commandLineArgs[1] : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Clipboard//content.csv");
+
             _hookID = SetHook(_proc);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
