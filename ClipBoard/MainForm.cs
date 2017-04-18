@@ -68,7 +68,7 @@ namespace ClipBoard
             // Add in saved records
             foreach (ClipBoardRecord s in savedItems)
             {
-                ListViewItem lvi = 
+                ListViewItem lvi =
                     new ListViewItem(new string[] { (i++).ToString(),
                                                     s.CoppiedCount.ToString(),
                                                     s.PastedCount.ToString(),
@@ -162,7 +162,7 @@ namespace ClipBoard
                 }
 
                 File.WriteAllLines(contentFileName, lines);
-            }        
+            }
         }
 
         /// <summary>
@@ -170,9 +170,13 @@ namespace ClipBoard
         /// </summary>
         private void resizeForm()
         {
-            this.Height = (listView.Items.Count * listView.Items[0].Bounds.Height)
-                                + (listView.Groups.Count * listView.GetItemRect(0).Height)
-                                + ((listView.Items.Count) + 100);
+            var listViewItemsCount = listView.Items.Count;
+            if (listViewItemsCount > 0)
+            {
+                this.Height = (listViewItemsCount * listView.Items[0].Bounds.Height)
+                                    + (listView.Groups.Count * listView.GetItemRect(0).Height)
+                                    + ((listView.Items.Count) + 100);
+            }
 
             Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
             linkLabelGitHub.Top = listView.Top + listView.Height + 5;
@@ -182,7 +186,7 @@ namespace ClipBoard
         private void loadContent(string contentFileName)
         {
             char[] delimiterChars = { ',' };
-            string[] fileFields;           
+            string[] fileFields;
             string[] lines = File.Exists(contentFileName) ? File.ReadAllLines(contentFileName) : new string[] { };
             string type;
 
@@ -287,7 +291,7 @@ namespace ClipBoard
 
         // increment the pasted counter for current clipboard content
         private void recordPaste()
-        {            
+        {
             ClipBoardRecord clipBoardRecord;
             if (Clipboard.ContainsText() && Clipboard.GetText().Length < maxCopyTextLength)
             {
@@ -334,7 +338,7 @@ namespace ClipBoard
             // paste to curreMonkey talk font cursor
             await Task.Delay(500);
             var inputSimulator = new InputSimulator();
-            inputSimulator.Keyboard.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_V);            
+            inputSimulator.Keyboard.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_V);
         }
 
         private void copyTextToClipBoard()
@@ -357,7 +361,7 @@ namespace ClipBoard
             }
             foreach (ClipBoardRecord s in recentItems)
             {
-                if(s.Content == content)
+                if (s.Content == content)
                     s.PastedCount++;
             }
             updateList();
@@ -395,7 +399,7 @@ namespace ClipBoard
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            removeClipBoardRecordViaContent(list.SelectedItems[0].SubItems[3].Text);            
+            removeClipBoardRecordViaContent(list.SelectedItems[0].SubItems[3].Text);
             updateList();
         }
 
