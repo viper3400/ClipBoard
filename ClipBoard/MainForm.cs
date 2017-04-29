@@ -447,6 +447,7 @@ namespace ClipBoard
             notifyIcon.Visible = false;
             this.WindowState = FormWindowState.Normal;
             this.Show();
+            resizeForm();
         }
 
         private void notifyIcon_Click(object sender, EventArgs e)
