@@ -20,12 +20,14 @@ namespace ClipBoard
         private List<ClipBoardRecord> recentItems;
         private bool allowSaveAsNowLoaded = false;
         IntPtr _ClipboardViewerNext;
+        IPersistenceController _persistenceController;
 
         public MainForm()
         {
             InitializeComponent();
             list = this.listView;
             this.FormBorderStyle = FormBorderStyle.None;
+            _persistenceController = new CsvPersistenceController();
             savedItems = new List<ClipBoardRecord>(10);
             recentItems = new List<ClipBoardRecord>(10);
             frequentItems = new List<ClipBoardRecord>(10);
@@ -119,39 +121,13 @@ namespace ClipBoard
             }
 
             //save to csv
-            writeToCsv();
+            if (allowSaveAsNowLoaded)
+            {
+                _persistenceController.SaveToFile(contentFileName, savedItems, recentItems);
+            }
 
             //resize the form to fit the number of items
             resizeForm();
-        }
-
-        private void writeToCsv()
-        {
-            // this function is a candadiate for error handling
-            if (allowSaveAsNowLoaded)
-            {
-                string[] lines = new string[savedItems.Count + Math.Min(recentItems.Count, 30)];
-                int i = 0;
-                foreach (ClipBoardRecord s in savedItems)
-                {
-                    lines[i++] = "|," + s.CoppiedCount + "," + s.PastedCount + "," + "saved: " + Regex.Escape(s.Content);
-                }
-                foreach (ClipBoardRecord s in recentItems)
-                {
-                    lines[i++] = "|," + s.CoppiedCount + "," + s.PastedCount + "," + "recent:" + Regex.Escape(s.Content);
-                    if (i >= savedItems.Count + 30)
-                    {
-                        break;
-                    }
-                }
-
-                if (!Directory.Exists(Path.GetDirectoryName(contentFileName)))
-                {
-                    Directory.CreateDirectory(Path.GetDirectoryName(contentFileName));
-                }
-
-                File.WriteAllLines(contentFileName, lines);
-            }
         }
 
         /// <summary>
