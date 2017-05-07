@@ -9,5 +9,6 @@ namespace ClipBoard
     interface IPersistenceController
     {
         void SaveToFile(string FileName, List<ClipBoardRecord> SavedItems, List<ClipBoardRecord> RecentItems);
+        Dictionary<string, List<ClipBoardRecord>> LoadFromFile(string FileName);
     }
 }

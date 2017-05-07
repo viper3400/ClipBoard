@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -150,42 +151,9 @@ namespace ClipBoard
 
         private void loadContent(string contentFileName)
         {
-            char[] delimiterChars = { ',' };
-            string[] fileFields;
-            string[] lines = File.Exists(contentFileName) ? File.ReadAllLines(contentFileName) : new string[] { };
-            string type;
-
-            foreach (string s in lines)
-            {
-                ClipBoardRecord rec = new ClipBoardRecord();
-
-                // Find out if we have a saved file containing counts
-                if (s.StartsWith("|")) // then new file format 
-                {
-                    fileFields = s.Split(delimiterChars, 4);
-                    rec.CoppiedCount = int.Parse(fileFields[1]);
-                    rec.PastedCount = int.Parse(fileFields[2]);
-                    rec.Content = Regex.Unescape(fileFields[3].Substring(7));
-                    type = fileFields[3].Substring(0, 7);
-                }
-                else // handle previous file format
-                {
-                    rec.Content = Regex.Unescape(s.Substring(7));
-                    rec.CoppiedCount = 0;
-                    rec.PastedCount = 0;
-                    type = s.Substring(0, 7);
-                }
-
-                // now have have the data add it to the relevent list
-                if (type.StartsWith("saved:"))
-                {
-                    savedItems.Add(rec);
-                }
-                else if (type.StartsWith("recent:"))
-                {
-                    recentItems.Add(rec);
-                }
-            }
+            var items = _persistenceController.LoadFromFile(contentFileName);
+            recentItems = items.Where(i => i.Key == "recent").Select(i => i.Value).FirstOrDefault();
+            savedItems = items.Where(i => i.Key == "saved").Select(i => i.Value).FirstOrDefault();
         }
 
         public void keyPressedHandler(Keys keys)
