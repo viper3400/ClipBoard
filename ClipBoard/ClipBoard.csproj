@@ -69,6 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClipBoardListController.cs" />
     <Compile Include="ClipBoardRecord.cs" />
     <Compile Include="CsvPersistenceController.cs" />
     <Compile Include="IPersistenceController.cs" />
