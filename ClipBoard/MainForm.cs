@@ -467,13 +467,13 @@ namespace ClipBoard
                 0x2 = HTCAPTION - Application Title Bar
                 */
                 ClipBoard.Program.ReleaseCapture();
-                ClipBoard.Program.SendMessage(Handle, (int)ClipBoard.Program.Msgs.WM_NCLBUTTONDOWN, (IntPtr)0x2, (IntPtr)0);
+                ClipBoard.Program.SendMessage(Handle, (int)ClipBoard.Msgs.WM_NCLBUTTONDOWN, (IntPtr)0x2, (IntPtr)0);
             }
         }
         protected override void WndProc(ref Message m)
         {
 
-            switch ((ClipBoard.Program.Msgs)m.Msg)
+            switch ((ClipBoard.Msgs)m.Msg)
             {
                 //
                 // The WM_DRAWCLIPBOARD message is sent to the first window 
@@ -481,7 +481,7 @@ namespace ClipBoard
                 // clipboard changes. This enables a clipboard viewer 
                 // window to display the new content of the clipboard. 
                 //
-                case ClipBoard.Program.Msgs.WM_DRAWCLIPBOARD:
+                case ClipBoard.Msgs.WM_DRAWCLIPBOARD:
 
                     handleClipboardChanged();
 
@@ -499,7 +499,7 @@ namespace ClipBoard
                 // in the clipboard viewer chain when a window is being 
                 // removed from the chain. 
                 //
-                case ClipBoard.Program.Msgs.WM_CHANGECBCHAIN:
+                case ClipBoard.Msgs.WM_CHANGECBCHAIN:
 
                     // When a clipboard viewer window receives the WM_CHANGECBCHAIN message, 
                     // it should call the SendMessage function to pass the message to the 
