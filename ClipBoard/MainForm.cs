@@ -21,17 +21,6 @@ namespace ClipBoard
         private bool allowSaveAsNowLoaded = false;
         IntPtr _ClipboardViewerNext;
 
-        [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
-        private static extern IntPtr CreateRoundRectRgn
-        (
-            int nLeftRect, // x-coordinate of upper-left corner
-            int nTopRect, // y-coordinate of upper-left corner
-            int nRightRect, // x-coordinate of lower-right corner
-            int nBottomRect, // y-coordinate of lower-right corner
-            int nWidthEllipse, // height of ellipse
-            int nHeightEllipse // width of ellipse
-         );
-
         public MainForm()
         {
             InitializeComponent();
@@ -42,7 +31,7 @@ namespace ClipBoard
             frequentItems = new List<ClipBoardRecord>(10);
             this.MouseDown += new MouseEventHandler(Form_MouseDown);
             this.labelClipBoardManager.MouseDown += new MouseEventHandler(Form_MouseDown);
-            _ClipboardViewerNext = ClipBoard.Program.SetClipboardViewer(this.Handle);
+            _ClipboardViewerNext = ClipBoard.Win32Hooks.SetClipboardViewer(this.Handle);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -55,7 +44,7 @@ namespace ClipBoard
 
         private void MainForm_FormClosing(Object sender, FormClosingEventArgs e)
         {
-            ClipBoard.Program.ChangeClipboardChain(this.Handle, _ClipboardViewerNext);
+            ClipBoard.Win32Hooks.ChangeClipboardChain(this.Handle, _ClipboardViewerNext);
         }
 
         private void updateList()
@@ -178,7 +167,7 @@ namespace ClipBoard
                                     + ((listView.Items.Count) + 100);
             }
 
-            Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
+            Region = System.Drawing.Region.FromHrgn(Win32Hooks.CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
             linkLabelGitHub.Top = listView.Top + listView.Height + 5;
 
         }
@@ -466,8 +455,8 @@ namespace ClipBoard
                 Constants in Windows API
                 0x2 = HTCAPTION - Application Title Bar
                 */
-                ClipBoard.Program.ReleaseCapture();
-                ClipBoard.Program.SendMessage(Handle, (int)ClipBoard.Msgs.WM_NCLBUTTONDOWN, (IntPtr)0x2, (IntPtr)0);
+                ClipBoard.Win32Hooks.ReleaseCapture();
+                ClipBoard.Win32Hooks.SendMessage(Handle, (int)ClipBoard.Msgs.WM_NCLBUTTONDOWN, (IntPtr)0x2, (IntPtr)0);
             }
         }
         protected override void WndProc(ref Message m)
@@ -490,7 +479,7 @@ namespace ClipBoard
                     // must call the SendMessage function to pass the message 
                     // on to the next window in the clipboard viewer chain.
                     //
-                    ClipBoard.Program.SendMessage(_ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
+                    ClipBoard.Win32Hooks.SendMessage(_ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
                     break;
 
 
@@ -523,7 +512,7 @@ namespace ClipBoard
                     }
                     else
                     {
-                        ClipBoard.Program.SendMessage(_ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
+                        ClipBoard.Win32Hooks.SendMessage(_ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
                     }
                     break;
 
