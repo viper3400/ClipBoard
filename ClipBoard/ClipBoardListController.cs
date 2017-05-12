@@ -26,7 +26,14 @@ namespace ClipBoard
             set { _savedItems = value; }
         }
 
-        public List<ClipBoardRecord> FrequentItems { get { return _frequentItems; } }
+        public List<ClipBoardRecord> FrequentItems
+        {
+            get
+            {
+                var frequentItems = _recentItems.OrderByDescending(rec => rec.CoppiedCount + rec.PastedCount).Take(10);
+                return frequentItems.ToList();
+            }
+        }
         public List<ClipBoardRecord> RecentItems
         {
             get { return _recentItems; }

@@ -46,8 +46,8 @@ namespace ClipBoard
         private void updateList()
         {
             list.Items.Clear();
-            ClipBoardRecord mostCoppiedRecord = new ClipBoardRecord();
-            ClipBoardRecord mostPastedRecord = new ClipBoardRecord();
+            //ClipBoardRecord mostCoppiedRecord = new ClipBoardRecord();
+            //ClipBoardRecord mostPastedRecord = new ClipBoardRecord();
             int i = 1;
 
             // Add in saved records
@@ -64,30 +64,30 @@ namespace ClipBoard
             }
 
             // Calcualte both the most coppied and most pasted records
-            foreach (ClipBoardRecord s in _listController.RecentItems)
-            {
-                // work out for use later on the most coppied record
-                if (mostCoppiedRecord.CoppiedCount < s.CoppiedCount)
-                {
-                    mostCoppiedRecord = s;
-                }
-                // work out for use later on the most pasted record
-                if (mostPastedRecord.PastedCount < s.PastedCount)
-                {
-                    mostPastedRecord = s;
-                }
-            }
+            //foreach (ClipBoardRecord s in _listController.RecentItems)
+            //{
+            //    // work out for use later on the most coppied record
+            //    if (mostCoppiedRecord.CoppiedCount < s.CoppiedCount)
+            //    {
+            //        mostCoppiedRecord = s;
+            //    }
+            //    // work out for use later on the most pasted record
+            //    if (mostPastedRecord.PastedCount < s.PastedCount)
+            //    {
+            //        mostPastedRecord = s;
+            //    }
+            //}
 
             _listController.FrequentItems.Clear();
-            if (mostCoppiedRecord.CoppiedCount > 0)
-            {
-                _listController.FrequentItems.Add(mostCoppiedRecord);
-            }
-            // is mostCoppied is the same as mostPasted then only add one instance
-            if (mostPastedRecord.PastedCount > 0 && mostCoppiedRecord != mostPastedRecord)
-            {
-                _listController.FrequentItems.Add(mostPastedRecord);
-            }
+            //if (mostCoppiedRecord.CoppiedCount > 0)
+            //{
+            //    _listController.FrequentItems.Add(mostCoppiedRecord);
+            //}
+            //// is mostCoppied is the same as mostPasted then only add one instance
+            //if (mostPastedRecord.PastedCount > 0 && mostCoppiedRecord != mostPastedRecord)
+            //{
+            //    _listController.FrequentItems.Add(mostPastedRecord);
+            //}
             foreach (ClipBoardRecord s in _listController.FrequentItems)
             {
                 ListViewItem lvi =
@@ -244,6 +244,7 @@ namespace ClipBoard
                 int index = this.list.SelectedIndices[0];
                 string content = this.list.Items[index].SubItems[3].Text;
                 incrementPasted(content);
+                
                 Clipboard.SetText(content);
             }
         }
