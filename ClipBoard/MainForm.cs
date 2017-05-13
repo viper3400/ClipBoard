@@ -46,8 +46,7 @@ namespace ClipBoard
         private void updateList()
         {
             list.Items.Clear();
-            //ClipBoardRecord mostCoppiedRecord = new ClipBoardRecord();
-            //ClipBoardRecord mostPastedRecord = new ClipBoardRecord();
+            
             int i = 1;
 
             // Add in saved records
@@ -62,32 +61,9 @@ namespace ClipBoard
                 list.Items.Add(lvi);
                 list.Groups[0].Items.Add(lvi);
             }
-
-            // Calcualte both the most coppied and most pasted records
-            //foreach (ClipBoardRecord s in _listController.RecentItems)
-            //{
-            //    // work out for use later on the most coppied record
-            //    if (mostCoppiedRecord.CoppiedCount < s.CoppiedCount)
-            //    {
-            //        mostCoppiedRecord = s;
-            //    }
-            //    // work out for use later on the most pasted record
-            //    if (mostPastedRecord.PastedCount < s.PastedCount)
-            //    {
-            //        mostPastedRecord = s;
-            //    }
-            //}
-
+     
             _listController.FrequentItems.Clear();
-            //if (mostCoppiedRecord.CoppiedCount > 0)
-            //{
-            //    _listController.FrequentItems.Add(mostCoppiedRecord);
-            //}
-            //// is mostCoppied is the same as mostPasted then only add one instance
-            //if (mostPastedRecord.PastedCount > 0 && mostCoppiedRecord != mostPastedRecord)
-            //{
-            //    _listController.FrequentItems.Add(mostPastedRecord);
-            //}
+           
             foreach (ClipBoardRecord s in _listController.FrequentItems)
             {
                 ListViewItem lvi =
