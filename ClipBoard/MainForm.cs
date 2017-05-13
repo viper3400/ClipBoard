@@ -243,25 +243,11 @@ namespace ClipBoard
             {
                 int index = this.list.SelectedIndices[0];
                 string content = this.list.Items[index].SubItems[3].Text;
-                incrementPasted(content);
-                
+                _listController.IncrementPasted(content);
+                updateList();
+
                 Clipboard.SetText(content);
             }
-        }
-
-        private void incrementPasted(string content)
-        {
-            foreach (ClipBoardRecord s in _listController.SavedItems)
-            {
-                if (s.Content == content)
-                    s.PastedCount++;
-            }
-            foreach (ClipBoardRecord s in _listController.RecentItems)
-            {
-                if (s.Content == content)
-                    s.PastedCount++;
-            }
-            updateList();
         }
 
         private void listView_MouseClick(object sender, MouseEventArgs e)

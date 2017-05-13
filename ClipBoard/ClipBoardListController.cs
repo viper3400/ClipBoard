@@ -9,14 +9,12 @@ namespace ClipBoard
     class ClipBoardListController
     {
         private List<ClipBoardRecord> _savedItems;
-        private List<ClipBoardRecord> _frequentItems;
         private List<ClipBoardRecord> _recentItems;
         private static int _maxCopyTextLength = 10000;
 
         public ClipBoardListController()
         {
             _savedItems = new List<ClipBoardRecord>();
-            _frequentItems = new List<ClipBoardRecord>();
             _recentItems = new List<ClipBoardRecord>();
         }
 
@@ -30,7 +28,9 @@ namespace ClipBoard
         {
             get
             {
-                var frequentItems = _recentItems.OrderByDescending(rec => rec.CoppiedCount + rec.PastedCount).Take(10);
+                var frequentItems = _recentItems
+                    .Where(rec => rec.PastedCount > 0)
+                    .OrderByDescending(rec => rec.PastedCount).Take(10);
                 return frequentItems.ToList();
             }
         }
@@ -94,6 +94,20 @@ namespace ClipBoard
                     foundRecord = rec;
             }
             return foundRecord;
+        }
+
+        public void IncrementPasted(string content)
+        {
+            foreach (ClipBoardRecord s in _savedItems)
+            {
+                if (s.Content == content)
+                    s.PastedCount++;
+            }
+            foreach (ClipBoardRecord s in _recentItems)
+            {
+                if (s.Content == content)
+                    s.PastedCount++;
+            }
         }
 
 
