@@ -169,7 +169,7 @@ namespace ClipBoard
                 clipBoardRecord = _listController.GetClipBoardRecordViaContent(Clipboard.GetText());
                 if (clipBoardRecord != null)
                 {
-                    clipBoardRecord.PastedCount++;
+                    _listController.IncrementPasted(clipBoardRecord.Content);
                     updateList();
                 }
             }
@@ -219,7 +219,6 @@ namespace ClipBoard
             {
                 int index = this.list.SelectedIndices[0];
                 string content = this.list.Items[index].SubItems[3].Text;
-                _listController.IncrementPasted(content);
                 updateList();
 
                 Clipboard.SetText(content);
