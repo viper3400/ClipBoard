@@ -45,5 +45,15 @@ namespace ClipBoard
 
         }
 
+        [UserScopedSetting]
+        [Category("ClipBoard")]
+        [DefaultSettingValue("10000")]
+        [Description("Text with more chars than this value won't be handled by ClipBoard")]
+        public int MaxCopyTextLength
+        {
+            get { return (int)this["MaxCopyTextLength"]; }
+            set { this["MaxCopyTextLength"] = value; }
+        }
+
     }
 }

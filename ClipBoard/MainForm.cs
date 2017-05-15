@@ -12,7 +12,7 @@ namespace ClipBoard
     {
         public ListView list;
         private static string _settingsFile = Program.SettingsFileName;
-        private static int maxCopyTextLength = 10000;
+        private static int maxCopyTextLength;
         private bool allowSaveAsNowLoaded = false;
         private ClipBoardUserSettings _settings;
         IntPtr _ClipboardViewerNext;
@@ -30,6 +30,7 @@ namespace ClipBoard
             this.MouseDown += new MouseEventHandler(Form_MouseDown);
             this.labelClipBoardManager.MouseDown += new MouseEventHandler(Form_MouseDown);
             _ClipboardViewerNext = ClipBoard.Win32Hooks.SetClipboardViewer(this.Handle);
+            maxCopyTextLength = _settings.MaxCopyTextLength;
         }
 
         private void MainForm_Load(object sender, EventArgs e)

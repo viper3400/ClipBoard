@@ -11,13 +11,14 @@ namespace ClipBoard
         private List<ClipBoardRecord> _savedItems;
         private List<ClipBoardRecord> _recentItems;
         private ClipBoardUserSettings _settings;
-        private static int _maxCopyTextLength = 10000;
+        private static int _maxCopyTextLength;
 
         public ClipBoardListController(ClipBoardUserSettings SettingsProvider)
         {
             _savedItems = new List<ClipBoardRecord>();
             _recentItems = new List<ClipBoardRecord>();
             _settings = SettingsProvider;
+            _maxCopyTextLength = _settings.MaxCopyTextLength;
         }
 
         public List<ClipBoardRecord> SavedItems
