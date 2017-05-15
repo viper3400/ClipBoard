@@ -55,6 +55,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -71,6 +72,8 @@
   <ItemGroup>
     <Compile Include="ClipBoardListController.cs" />
     <Compile Include="ClipBoardRecord.cs" />
+    <Compile Include="ClipBoardUserSettings.cs" />
+    <Compile Include="PortableSettingsProvider.cs" />
     <Compile Include="CsvPersistenceController.cs" />
     <Compile Include="IPersistenceController.cs" />
     <Compile Include="Win32Hooks.cs" />
@@ -95,9 +98,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="ClassDiagram1.cd" />
     <None Include="content.csv" />
-    <None Include="Graph1.dgml" />
+    <None Include="DepdencyGraph.dgml" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

@@ -10,12 +10,14 @@ namespace ClipBoard
     {
         private List<ClipBoardRecord> _savedItems;
         private List<ClipBoardRecord> _recentItems;
+        private ClipBoardUserSettings _settings;
         private static int _maxCopyTextLength = 10000;
 
-        public ClipBoardListController()
+        public ClipBoardListController(ClipBoardUserSettings SettingsProvider)
         {
             _savedItems = new List<ClipBoardRecord>();
             _recentItems = new List<ClipBoardRecord>();
+            _settings = SettingsProvider;
         }
 
         public List<ClipBoardRecord> SavedItems
@@ -30,7 +32,7 @@ namespace ClipBoard
             {
                 var frequentItems = _recentItems
                     .Where(rec => rec.PastedCount > 0)
-                    .OrderByDescending(rec => rec.PastedCount).Take(10);
+                    .OrderByDescending(rec => rec.PastedCount).Take(_settings.MaxItemsInFrequentList);
                 return frequentItems.ToList();
             }
         }

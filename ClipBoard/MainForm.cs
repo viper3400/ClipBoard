@@ -24,7 +24,8 @@ namespace ClipBoard
             list = this.listView;
             this.FormBorderStyle = FormBorderStyle.None;
             _persistenceController = new CsvPersistenceController();
-            _listController = new ClipBoardListController();
+            var _settings = new ClipBoardUserSettings();
+            _listController = new ClipBoardListController(_settings);
             this.MouseDown += new MouseEventHandler(Form_MouseDown);
             this.labelClipBoardManager.MouseDown += new MouseEventHandler(Form_MouseDown);
             _ClipboardViewerNext = ClipBoard.Win32Hooks.SetClipboardViewer(this.Handle);

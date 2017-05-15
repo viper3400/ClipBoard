@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DirectedGraph xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+    <Node Id="@10" Category="CodeSchema_Method" Bounds="-9395.63631503164,-9820.83289009204,192.879999999997,26" CodeSchemaProperty_IsProtected="True" CommonLabel="WndProc" Icon="Microsoft.VisualStudio.Method.Protected" IsOverloaded="True" Label="WndProc(ref Message) : void" SourceLocation="(Assembly=file:///D:/WORK/ClipBoard/ClipBoard/MainForm.cs StartLineNumber=305 StartCharacterOffset=32 EndLineNumber=305 EndCharacterOffset=39)" />
+    <Node Id="@11" Category="CodeSchema_Method" Bounds="-9406.86898340497,-10104.8277701176,280.433333333334,26" CodeSchemaProperty_IsPrivate="True" CommonLabel="listView_DoubleClick" Icon="Microsoft.VisualStudio.Method.Private" Label="listView_DoubleClick(object, EventArgs) : void" SourceLocation="(Assembly=file:///D:/WORK/ClipBoard/ClipBoard/MainForm.cs StartLineNumber=184 StartCharacterOffset=21 EndLineNumber=184 EndCharacterOffset=41)" />
+    <Node Id="@12" Category="CodeSchema_Method" Bounds="-9095.59898340497,-10104.827770156,285.893333333333,26" CodeSchemaProperty_IsPrivate="True" CommonLabel="listView_KeyDown" Icon="Microsoft.VisualStudio.Method.Private" Label="listView_KeyDown(object, KeyEventArgs) : void" SourceLocation="(Assembly=file:///D:/WORK/ClipBoard/ClipBoard/MainForm.cs StartLineNumber=189 StartCharacterOffset=21 EndLineNumber=189 EndCharacterOffset=37)" />
+    <Node Id="@13" Category="CodeSchema_Method" Bounds="-9072.59565007164,-10048.8277701432,239.886666666665,26" CodeSchemaProperty_IsPrivate="True" CommonLabel="copyTextToClipboardAndPaste" Icon="Microsoft.VisualStudio.Method.Private" Label="copyTextToClipboardAndPaste() : void" SourceLocation="(Assembly=file:///D:/WORK/ClipBoard/ClipBoard/MainForm.cs StartLineNumber=202 StartCharacterOffset=27 EndLineNumber=202 EndCharacterOffset=54)" />
+    <Node Id="@14" Category="CodeSchema_Method" Bounds="-9406.84301476497,-9764.84005809204,215.353333333333,26" CodeSchemaProperty_IsPrivate="True" CommonLabel="handleClipboardChanged" Icon="Microsoft.VisualStudio.Method.Private" Label="handleClipboardChanged() : void" SourceLocation="(Assembly=file:///D:/WORK/ClipBoard/ClipBoard/MainForm.cs StartLineNumber=177 StartCharacterOffset=21 EndLineNumber=177 EndCharacterOffset=43)" />
+    <Node Id="@15" Category="CodeSchema_Method" Bounds="-9023.7923167383,-9936.82777011764,142.279999999999,26" CodeSchemaProperty_IsPrivate="True" CommonLabel="recordPaste" Icon="Microsoft.VisualStudio.Method.Private" Label="recordPaste() : void" SourceLocation="(Assembly=file:///D:/WORK/ClipBoard/ClipBoard/MainForm.cs StartLineNumber=163 StartCharacterOffset=21 EndLineNumber=163 EndCharacterOffset=32)" />
+    <Node Id="@16" Category="CodeSchema_Method" Bounds="-9366.76007012497,-9708.84722609204,135.239999999998,26" CodeSchemaProperty_IsPrivate="True" CommonLabel="updateList" Icon="Microsoft.VisualStudio.Method.Private" Label="updateList() : void" SourceLocation="(Assembly=file:///D:/WORK/ClipBoard/ClipBoard/MainForm.cs StartLineNumber=45 StartCharacterOffset=21 EndLineNumber=45 EndCharacterOffset=31)" />
+    <Node Id="@3" Category="CodeSchema_Class" Bounds="-9238.58014863017,-9612.84978606644,260.603333333333,86.0001999999986" CodeSchemaProperty_IsInternal="True" CommonLabel="ClipBoardListController" Group="Expanded" Icon="Microsoft.VisualStudio.Class.Internal" Label="ClipBoardListController" SourceLocation="(Assembly=file:///D:/WORK/ClipBoard/ClipBoard/ClipBoardListController.cs StartLineNumber=8 StartCharacterOffset=10 EndLineNumber=8 EndCharacterOffset=33)" UseManualLocation="True" />
+    <Node Id="@5" Category="CodeSchema_Class" Bounds="-9446.86898340497,-10184.8277701816,677.163333333334,541.977984102401" CodeSchemaProperty_IsPublic="True" CommonLabel="MainForm" Group="Expanded" Icon="Microsoft.VisualStudio.Class.Public" Label="MainForm" LayoutSettings="LeftToRight" SourceLocation="(Assembly=file:///D:/WORK/ClipBoard/ClipBoard/MainForm.Designer.cs StartLineNumber=4 StartCharacterOffset=18 EndLineNumber=4 EndCharacterOffset=26)" UseManualLocation="True" />
+    <Node Id="@7" Category="CodeSchema_Method" Bounds="-9055.0173167383,-9992.82777013044,204.73,26" CodeSchemaProperty_IsPublic="True" CommonLabel="keyPressedHandler" Icon="Microsoft.VisualStudio.Method.Public" Label="keyPressedHandler(Keys) : void" SourceLocation="(Assembly=file:///D:/WORK/ClipBoard/ClipBoard/MainForm.cs StartLineNumber=127 StartCharacterOffset=20 EndLineNumber=127 EndCharacterOffset=37)" />
+    <Node Id="@9" Category="CodeSchema_Method" Bounds="-9218.57578955587,-9572.8483545089,220.603333333333,26" CodeSchemaProperty_IsPublic="True" CommonLabel="AddClipBoardRecord" Icon="Microsoft.VisualStudio.Method.Public" Label="AddClipBoardRecord(string) : void" SourceLocation="(Assembly=file:///D:/WORK/ClipBoard/ClipBoard/ClipBoardListController.cs StartLineNumber=43 StartCharacterOffset=20 EndLineNumber=43 EndCharacterOffset=38)" />
+    <Node Id="Copy" Bounds="-9426.8696211527,-9860.83097063318,255.399172724165,197.981823999999" Group="Expanded" />
+    <Node Id="Paste" Bounds="-9426.86898340497,-10144.8277701688,637.163333333334,254.000000063999" Group="Expanded" />
+  </Nodes>
+  <Links>
+    <Link Source="@10" Target="@14" Bounds="-9299.169921875,-9794.8369140625,0,20.998046875" />
+    <Link Source="@11" Target="@13" Bounds="-9193.759765625,-10078.8349609375,159.3544921875,28.419921875" />
+    <Link Source="@12" Target="@13" Bounds="-8952.65234375,-10078.8349609375,0,21" />
+    <Link Source="@13" Target="@7" Bounds="-8952.65234375,-10022.8349609375,0,21" />
+    <Link Source="@14" Target="@16" Bounds="-9299.169921875,-9738.841796875,0,20.998046875" />
+    <Link Source="@14" Target="@9" Bounds="-9286.24109709451,-9738.83418507342,158.696260826504,159.618134990835" />
+    <Link Source="@3" Target="@9" Category="Contains" />
+    <Link Source="@5" Target="Copy" Category="Contains" />
+    <Link Source="@5" Target="Paste" Category="Contains" />
+    <Link Source="@7" Target="@15" Bounds="-8952.65234375,-9966.8349609375,0,21" />
+    <Link Source="Copy" Target="@10" Category="Contains" />
+    <Link Source="Copy" Target="@14" Category="Contains" />
+    <Link Source="Copy" Target="@16" Category="Contains" />
+    <Link Source="Paste" Target="@11" Category="Contains" />
+    <Link Source="Paste" Target="@12" Category="Contains" />
+    <Link Source="Paste" Target="@13" Category="Contains" />
+    <Link Source="Paste" Target="@15" Category="Contains" />
+    <Link Source="Paste" Target="@7" Category="Contains" />
+  </Links>
+  <Categories>
+    <Category Id="CodeSchema_Class" Label="Class" BasedOn="CodeSchema_Type" CanBeDataDriven="True" DefaultAction="Node:Both:CodeSchema_Member" Icon="CodeSchema_Class" NavigationActionLabel="Classes" />
+    <Category Id="CodeSchema_Member" Label="Member" CanBeDataDriven="True" DefaultAction="Microsoft.Contains" Icon="CodeSchema_Field" NavigationActionLabel="Members" />
+    <Category Id="CodeSchema_Method" Label="Method" BasedOn="CodeSchema_Member" CanBeDataDriven="True" DefaultAction="Link:Forward:CodeSchema_Calls" Icon="CodeSchema_Method" NavigationActionLabel="Methods" />
+    <Category Id="CodeSchema_Type" Label="Type" CanBeDataDriven="True" DefaultAction="Node:Both:CodeSchema_Member" Icon="CodeSchema_Class" NavigationActionLabel="Types" />
+    <Category Id="Contains" Label="Contains" Description="Whether the source of the link contains the target object" CanBeDataDriven="False" CanLinkedNodesBeDataDriven="True" IncomingActionLabel="Contained By" IsContainment="True" OutgoingActionLabel="Contains" />
+  </Categories>
+  <Properties>
+    <Property Id="Bounds" DataType="System.Windows.Rect" />
+    <Property Id="CanBeDataDriven" Label="CanBeDataDriven" Description="CanBeDataDriven" DataType="System.Boolean" />
+    <Property Id="CanLinkedNodesBeDataDriven" Label="CanLinkedNodesBeDataDriven" Description="CanLinkedNodesBeDataDriven" DataType="System.Boolean" />
+    <Property Id="CodeSchemaProperty_IsInternal" Label="Is Internal" Description="Flag to indicate the method is 'Internal'" DataType="System.Boolean" />
+    <Property Id="CodeSchemaProperty_IsPrivate" Label="Is Private" Description="Flag to indicate the scope is Private" DataType="System.Boolean" />
+    <Property Id="CodeSchemaProperty_IsProtected" Label="Is Protected" Description="Flag to indicate the scope is Protected" DataType="System.Boolean" />
+    <Property Id="CodeSchemaProperty_IsPublic" Label="Is Public" Description="Flag to indicate the scope is Public" DataType="System.Boolean" />
+    <Property Id="CommonLabel" DataType="System.String" />
+    <Property Id="DefaultAction" Label="DefaultAction" Description="DefaultAction" DataType="System.String" />
+    <Property Id="Group" Label="Group" Description="Display the node as a group" DataType="Microsoft.VisualStudio.GraphModel.GraphGroupStyle" />
+    <Property Id="Icon" Label="Icon" Description="Icon" DataType="System.String" />
+    <Property Id="IncomingActionLabel" Label="IncomingActionLabel" Description="IncomingActionLabel" DataType="System.String" />
+    <Property Id="IsContainment" DataType="System.Boolean" />
+    <Property Id="IsOverloaded" Label="IsOverloaded" Description="IsOverloaded" DataType="System.Boolean" />
+    <Property Id="Label" Label="Label" Description="Displayable label of an Annotatable object" DataType="System.String" />
+    <Property Id="LayoutSettings" DataType="Microsoft.VisualStudio.Diagrams.View.GroupLayoutStyle" />
+    <Property Id="NavigationActionLabel" Label="NavigationActionLabel" Description="NavigationActionLabel" DataType="System.String" />
+    <Property Id="OutgoingActionLabel" Label="OutgoingActionLabel" Description="OutgoingActionLabel" DataType="System.String" />
+    <Property Id="SourceLocation" Label="Start Line Number" DataType="Microsoft.VisualStudio.GraphModel.CodeSchema.SourceLocation" />
+    <Property Id="UseManualLocation" DataType="System.Boolean" />
+  </Properties>
+  <QualifiedNames>
+    <Name Id="Assembly" Label="Assembly" ValueType="Uri" />
+    <Name Id="Member" Label="Member" ValueType="System.Object" />
+    <Name Id="Name" Label="Name" ValueType="System.String" />
+    <Name Id="Namespace" Label="Namespace" ValueType="System.String" />
+    <Name Id="OverloadingParameters" Label="Parameter" ValueType="Microsoft.VisualStudio.GraphModel.GraphNodeIdCollection" Formatter="NameValueNoEscape" />
+    <Name Id="ParamKind" Label="Parameter Kind" ValueType="Microsoft.VisualStudio.GraphModel.CodeSchema.ParamKind" />
+    <Name Id="Type" Label="Type" ValueType="System.Object" />
+  </QualifiedNames>
+  <IdentifierAliases>
+    <Alias n="1" Uri="Assembly=$(8a9a8f2d-c40c-4a74-9f54-8609b20fa418.OutputPathUri)" />
+    <Alias n="2" Id="Namespace=ClipBoard" />
+    <Alias n="3" Id="(@1 @2 Type=ClipBoardListController)" />
+    <Alias n="4" Id="Type=MainForm" />
+    <Alias n="5" Id="(@1 @2 @4)" />
+    <Alias n="6" Uri="Assembly=$(FxReferenceAssembliesUri)/.NETFramework/v4.5/System.Windows.Forms.dll" />
+    <Alias n="7" Id="(@1 @2 @4 Member=(Name=keyPressedHandler OverloadingParameters=[(@6 Namespace=System.Windows.Forms Type=Keys)]))" />
+    <Alias n="8" Uri="Assembly=$(FxReferenceAssembliesUri)/.NETFramework/v4.5/mscorlib.dll" />
+    <Alias n="9" Id="(@1 @2 Type=ClipBoardListController Member=(Name=AddClipBoardRecord OverloadingParameters=[(@8 Namespace=System Type=String)]))" />
+    <Alias n="10" Id="(@1 @2 @4 Member=(Name=WndProc OverloadingParameters=[(@6 Namespace=System.Windows.Forms Type=Message ParamKind=Ref)]))" />
+    <Alias n="11" Id="(@1 @2 @4 Member=(Name=listView_DoubleClick OverloadingParameters=[(@8 Namespace=System Type=Object),(@8 Namespace=System Type=EventArgs)]))" />
+    <Alias n="12" Id="(@1 @2 @4 Member=(Name=listView_KeyDown OverloadingParameters=[(@8 Namespace=System Type=Object),(@6 Namespace=System.Windows.Forms Type=KeyEventArgs)]))" />
+    <Alias n="13" Id="(@1 @2 @4 Member=copyTextToClipboardAndPaste)" />
+    <Alias n="14" Id="(@1 @2 @4 Member=handleClipboardChanged)" />
+    <Alias n="15" Id="(@1 @2 @4 Member=recordPaste)" />
+    <Alias n="16" Id="(@1 @2 @4 Member=updateList)" />
+  </IdentifierAliases>
+  <Paths>
+    <Path Id="8a9a8f2d-c40c-4a74-9f54-8609b20fa418.OutputPath" Value="D:\WORK\ClipBoard\ClipBoard\bin\Debug\ClipBoard.exe" />
+    <Path Id="8a9a8f2d-c40c-4a74-9f54-8609b20fa418.OutputPathUri" Value="file:///D:/WORK/ClipBoard/ClipBoard/bin/Debug/ClipBoard.exe" />
+    <Path Id="FxReferenceAssemblies" Value="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework" />
+    <Path Id="FxReferenceAssembliesUri" Value="file:///C:/Program Files (x86)/Reference Assemblies/Microsoft/Framework" />
+  </Paths>
+</DirectedGraph>
