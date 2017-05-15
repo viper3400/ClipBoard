@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ namespace ClipBoard
     public class ClipBoardUserSettings : ApplicationSettingsBase
     {
         [UserScopedSetting]
+        [Category("ClipBoard")]
         [DefaultSettingValue("10")]
         public int MaxItemsInFrequentList
         {
@@ -18,6 +20,15 @@ namespace ClipBoard
             set { this["MaxItemsInFrequentList"] = value; }
         }
 
+
+        [UserScopedSetting]
+        [Category("ClipBoard")]       
+        public string ContentFile
+        {
+            get { return (string)this["ContentFile"]; }
+            set { this["ContentFile"] = value; }
+
+        }
 
     }
 }

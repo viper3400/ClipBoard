@@ -47,7 +47,7 @@ namespace ClipBoard
         private void updateList()
         {
             list.Items.Clear();
-            
+
             int i = 1;
 
             // Add in saved records
@@ -62,9 +62,9 @@ namespace ClipBoard
                 list.Items.Add(lvi);
                 list.Groups[0].Items.Add(lvi);
             }
-     
+
             _listController.FrequentItems.Clear();
-           
+
             foreach (ClipBoardRecord s in _listController.FrequentItems)
             {
                 ListViewItem lvi =
@@ -371,14 +371,22 @@ namespace ClipBoard
             }
         }
 
-        private void labelMinimize_Click(object sender, EventArgs e)
-        {
-            hideScreen();
-        }
-
         private void linkLabelGitHub_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start(linkLabelGitHub.Text);
+        }
+
+        private void labelMinimize_Click(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                hideScreen();
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                var configurator = new ClipBoardConfigurator();
+                configurator.ShowDialog();
+            }
         }
     }
 }
