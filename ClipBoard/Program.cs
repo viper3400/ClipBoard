@@ -18,6 +18,7 @@ namespace ClipBoard
         private static IntPtr _hookID = IntPtr.Zero;
         private static MainForm mf;
         public static string ContentFileName;
+        public static string SettingsFileName;
 
         /// <summary>
         /// The main entry point for the application.
@@ -28,9 +29,10 @@ namespace ClipBoard
             // check if a content file has been provided in command line,
             // otherwise set its name to the users %APDDATA% 
             var commandLineArgs = Environment.GetCommandLineArgs();
-            ContentFileName = commandLineArgs.Length > 1 ? 
-                commandLineArgs[1] : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Clipboard//content.csv");
+            //ContentFileName = commandLineArgs.Length > 1 ? 
+            //    commandLineArgs[1] : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Clipboard//content.csv");
 
+            SettingsFileName = commandLineArgs.Length > 1 ? commandLineArgs[1] : "";
             _hookID = SetHook(_proc);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

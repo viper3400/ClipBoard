@@ -11,9 +11,10 @@ namespace ClipBoard
     public partial class MainForm : Form
     {
         public ListView list;
-        private static string contentFileName = Program.ContentFileName;
+        private static string _settingsFile = Program.SettingsFileName;
         private static int maxCopyTextLength = 10000;
         private bool allowSaveAsNowLoaded = false;
+        private ClipBoardUserSettings _settings;
         IntPtr _ClipboardViewerNext;
         IPersistenceController _persistenceController;
         ClipBoardListController _listController;
@@ -24,7 +25,7 @@ namespace ClipBoard
             list = this.listView;
             this.FormBorderStyle = FormBorderStyle.None;
             _persistenceController = new CsvPersistenceController();
-            var _settings = new ClipBoardUserSettings();
+            _settings = new ClipBoardUserSettings(_settingsFile);        
             _listController = new ClipBoardListController(_settings);
             this.MouseDown += new MouseEventHandler(Form_MouseDown);
             this.labelClipBoardManager.MouseDown += new MouseEventHandler(Form_MouseDown);
@@ -34,7 +35,7 @@ namespace ClipBoard
         private void MainForm_Load(object sender, EventArgs e)
         {
             list.TileSize = System.Drawing.Size.Empty;
-            loadContent(contentFileName);
+            loadContent(_settings.ContentFile);
             updateList();
             allowSaveAsNowLoaded = true;
         }
@@ -94,7 +95,7 @@ namespace ClipBoard
             //save to csv
             if (allowSaveAsNowLoaded)
             {
-                _persistenceController.SaveToFile(contentFileName, _listController.SavedItems, _listController.RecentItems);
+                _persistenceController.SaveToFile(_settings.ContentFile, _listController.SavedItems, _listController.RecentItems);
             }
 
             //resize the form to fit the number of items
@@ -384,7 +385,7 @@ namespace ClipBoard
             }
             else if (e.Button == MouseButtons.Right)
             {
-                var configurator = new ClipBoardConfigurator();
+                var configurator = new ClipBoardConfigurator(_settings);
                 configurator.ShowDialog();
             }
         }

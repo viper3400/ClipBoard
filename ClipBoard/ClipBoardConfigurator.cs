@@ -14,21 +14,34 @@ namespace ClipBoard
     {
         public ClipBoardConfigurator()
         {
+            InitForm();
+        }
+
+        public ClipBoardConfigurator(ClipBoardUserSettings Settings)
+        {
+            InitForm();
+            _settings = Settings;
+            propertyGrid1.SelectedObject = _settings;
+            propertyGrid1.Enabled = true;
+        }
+
+        private void InitForm()
+        {
             InitializeComponent();
         }
 
-        private ClipBoardUserSettings settings;
+        private ClipBoardUserSettings _settings;
 
         private void loadConfigurationFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            settings = new ClipBoardUserSettings();
-            propertyGrid1.SelectedObject = settings;
-            propertyGrid1.Enabled = true;
+            //settings = new ClipBoardUserSettings();
+            //propertyGrid1.SelectedObject = _settings;
+            //propertyGrid1.Enabled = true;
         }
 
         private void saveConfigurationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            settings.Save();
+            _settings.Save();
         }
     }
 }

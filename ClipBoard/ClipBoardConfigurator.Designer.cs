@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClipBoardConfigurator));
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,14 +68,15 @@
             // loadConfigurationFileToolStripMenuItem
             // 
             this.loadConfigurationFileToolStripMenuItem.Name = "loadConfigurationFileToolStripMenuItem";
-            this.loadConfigurationFileToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.loadConfigurationFileToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.loadConfigurationFileToolStripMenuItem.Text = "&Open";
+            this.loadConfigurationFileToolStripMenuItem.Visible = false;
             this.loadConfigurationFileToolStripMenuItem.Click += new System.EventHandler(this.loadConfigurationFileToolStripMenuItem_Click);
             // 
             // saveConfigurationToolStripMenuItem
             // 
             this.saveConfigurationToolStripMenuItem.Name = "saveConfigurationToolStripMenuItem";
-            this.saveConfigurationToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.saveConfigurationToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveConfigurationToolStripMenuItem.Text = "&Save";
             this.saveConfigurationToolStripMenuItem.Click += new System.EventHandler(this.saveConfigurationToolStripMenuItem_Click);
             // 
@@ -85,6 +87,7 @@
             this.ClientSize = new System.Drawing.Size(685, 350);
             this.Controls.Add(this.propertyGrid1);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "ClipBoardConfigurator";
             this.Text = "ClipBoard Configurator";

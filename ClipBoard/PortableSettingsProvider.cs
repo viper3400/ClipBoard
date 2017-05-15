@@ -11,28 +11,27 @@ namespace ClipBoard
     /// A settings provider: https://github.com/everweb/PortableSettingsProvider
     /// </summary>
     public sealed class PortableSettingsProvider : SettingsProvider, IApplicationSettingsProvider
-    {
-        //TEST//private static string _machineName = null;
+    {     
         private const string _rootNodeName = "settings";
         private const string _localSettingsNodeName = "localSettings";
         private const string _globalSettingsNodeName = "globalSettings";
         private const string _className = "PortableSettingsProvider";
         private string _appName = null;
         private XmlDocument _xmlDocument;
+        private string _filePath;
 
-        //TEST//public static void OverrideMachineName(string machineName)
-        //TEST//{
-        //TEST//	_machineName = machineName;
-        //TEST//}
 
-        private string _filePath
+        public string FilePath
         {
             get
             {
-                //Not available to Console App// Path.GetDirectoryName(Application.ExecutablePath)			
-                return Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                   string.Format("{0}.settings", ApplicationName));
+                _filePath = String.IsNullOrWhiteSpace(_filePath) ?
+                     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Clipboard//clipboard.settings") :
+                     _filePath;
+                return _filePath;
+
             }
+            set { _filePath = value; }
         }
 
         private XmlNode _localSettingsNode
@@ -42,10 +41,7 @@ namespace ClipBoard
                 XmlNode settingsNode = GetSettingsNode(_localSettingsNodeName);
 
                 string xpath = Environment.MachineName.ToLowerInvariant();
-                //TEST//if (_machineName != null)
-                //TEST//{
-                //TEST//	xpath = _machineName;
-                //TEST//}
+
                 if (!string.IsNullOrEmpty(xpath))
                 {
                     //XPath should not begin with a number or symbol. Prefix with an arbitrary 'm'.
@@ -86,7 +82,7 @@ namespace ClipBoard
                     try
                     {
                         _xmlDocument = new XmlDocument();
-                        _xmlDocument.Load(_filePath);
+                        _xmlDocument.Load(FilePath);
                     }
                     catch (Exception)
                     {
@@ -140,7 +136,12 @@ namespace ClipBoard
 
             try
             {
-                _rootDocument.Save(_filePath);
+                if (!Directory.Exists(Path.GetDirectoryName(FilePath)))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(FilePath));
+                }
+
+                _rootDocument.Save(FilePath);
             }
             catch (Exception)
             {
@@ -241,7 +242,7 @@ namespace ClipBoard
             _localSettingsNode.RemoveAll();
             _globalSettingsNode.RemoveAll();
 
-            _xmlDocument.Save(_filePath);
+            _xmlDocument.Save(FilePath);
         }
 
         public SettingsPropertyValue GetPreviousVersion(SettingsContext context, SettingsProperty property)
