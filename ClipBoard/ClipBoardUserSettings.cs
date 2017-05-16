@@ -57,5 +57,14 @@ namespace ClipBoard
             set { this["MaxCopyTextLength"] = value; }
         }
 
+        [UserScopedSetting]
+        [Category("ClipBoard")]
+        [DefaultSettingValue("Space")]
+        [Description("CTRL + HotKey will open ClipBoard Manager window when minimized. See https://msdn.microsoft.com/de-de/library/system.windows.forms.keys(v=vs.110).aspx for available keys.")]
+        public string HotKey
+        {
+            get { return (string)this["HotKey"]; }
+            set { this["HotKey"] = value; }
+        }
     }
 }

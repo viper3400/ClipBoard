@@ -131,8 +131,11 @@ namespace ClipBoard
         public void keyPressedHandler(Keys keys)
         {
             Keys ModKeys = ModifierKeys; // save locally to aid debugging
-            //control-` pressed or control-shift-b
-            if ((ModKeys & Keys.Control) == Keys.Control && (keys == Keys.Oemtilde || keys == Keys.Space))
+
+            Keys userHotKey;
+            Enum.TryParse<Keys>(_settings.HotKey, out userHotKey);
+
+            if ((ModKeys & Keys.Control) == Keys.Control && (keys == Keys.Oemtilde || keys == userHotKey))
             {
                 showScreen();
             }
