@@ -66,5 +66,15 @@ namespace ClipBoard
             get { return (string)this["HotKey"]; }
             set { this["HotKey"] = value; }
         }
+
+        [UserScopedSetting]
+        [Category("ClipBoard")]
+        [DefaultSettingValue("false")]
+        [Description("Set true if Clipboard manager should run on Windows startup.")]
+        public bool RunOnStartup
+        {
+            get { return (bool)this["RunOnStartup"]; }
+            set { this["RunOnStartup"] = value; }
+        }
     }
 }
