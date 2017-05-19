@@ -52,7 +52,7 @@ Number of items which are shown in the frequent list. Set this to 0 to disable t
 
 CTRL + HotKey will open ClipBoard Manager window when minimized. See https://msdn.microsoft.com/de-de/library/system.windows.forms.keys(v=vs.110).aspx for available keys (case sensitive!)
 
-**Note:** CTRL key is given at this time and no configurable. You may only choose the additional key.
+**Note:** CTRL key is given at this time and not configurable. You may only choose the additional key.
 
 #### Option "RunOnStartup"
 *Default: false*
