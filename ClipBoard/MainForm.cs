@@ -27,17 +27,18 @@ namespace ClipBoard
             this.FormBorderStyle = FormBorderStyle.None;
             _persistenceController = new CsvPersistenceController();
             _settings = new ClipBoardUserSettings(_settingsFile);
-            _settings.SettingsSaving += _settings_SettingsSaving;
+            _settings.SettingsSaving += SettingsSaving;
             _listController = new ClipBoardListController(_settings);
             this.MouseDown += new MouseEventHandler(Form_MouseDown);
             this.labelClipBoardManager.MouseDown += new MouseEventHandler(Form_MouseDown);
             _ClipboardViewerNext = ClipBoard.Win32Hooks.SetClipboardViewer(this.Handle);
             maxCopyTextLength = _settings.MaxCopyTextLength;
+            HandleStartupSetting(_settings.RunOnStartup);
         }
 
-        private void _settings_SettingsSaving(object sender, System.ComponentModel.CancelEventArgs e)
+        private void HandleStartupSetting(bool RunOnStartup)
         {
-            if (_settings.RunOnStartup)
+            if (RunOnStartup)
             {
                 var path = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
                 RegistryKey key = Registry.CurrentUser.OpenSubKey(path, true);
@@ -49,6 +50,10 @@ namespace ClipBoard
                 RegistryKey key = Registry.CurrentUser.OpenSubKey(path, true);
                 key.DeleteValue("Clipboard", false);
             }
+        }
+        private void SettingsSaving(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            HandleStartupSetting(_settings.RunOnStartup);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
