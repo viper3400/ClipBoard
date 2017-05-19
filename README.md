@@ -37,29 +37,29 @@ To open the configuration dialog right click on the window minimize icon (top ri
 
 **Note:** This is a breaking change from former versions. First command line argmunent has been used to select a differnt content file. If you like to continue to use a content file in a custom location you now have to set this via configuration dialog.
 
-## Option "ContentFile"
+#33# Option "ContentFile"
 *Default:  %APPDATA%\Clipboard\content.csv*
 
 Path and filename of the file where your ClipBoard content will be saved.
 
-## Option "MaxItemsInFrequentList"
+#### Option "MaxItemsInFrequentList"
 *Default: 10*
 
 Number of items which are shown in the frequent list. Set this to 0 to disable this feature.
 
-## Option "HotKey"
+#### Option "HotKey"
 *Default: Space*
 
 CTRL + HotKey will open ClipBoard Manager window when minimized. See https://msdn.microsoft.com/de-de/library/system.windows.forms.keys(v=vs.110).aspx for available keys (case sensitive!)
 
 **Note:** CTRL key is given at this time and no configurable. You may only choose the additional key.
 
-## Option "RunOnStartup"
+#### Option "RunOnStartup"
 *Default: false*
 
 Set true if Clipboard Manager should run on Windows startup.
 
-## Option "MaxCopyTextLength"
+#### Option "MaxCopyTextLength"
 *Default: false*
 Text with more chars than this value won't be handled by ClipBoard.
 
