@@ -17,7 +17,7 @@ namespace ClipBoard
             InitForm();
         }
 
-        public ClipBoardConfigurator(ClipBoardUserSettings Settings)
+        public ClipBoardConfigurator(ClipBoardUserSettings Settings, bool SaveOnExit = false)
         {
             InitForm();
             _settings = Settings;
@@ -40,6 +40,11 @@ namespace ClipBoard
         }
 
         private void saveConfigurationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _settings.Save();
+        }
+
+        private void ClipBoardConfigurator_FormClosed(object sender, FormClosedEventArgs e)
         {
             _settings.Save();
         }

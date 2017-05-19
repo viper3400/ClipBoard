@@ -41,18 +41,21 @@
             // 
             this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGrid1.LineColor = System.Drawing.SystemColors.ControlDark;
-            this.propertyGrid1.Location = new System.Drawing.Point(0, 24);
+            this.propertyGrid1.Location = new System.Drawing.Point(0, 44);
+            this.propertyGrid1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(685, 326);
+            this.propertyGrid1.Size = new System.Drawing.Size(1370, 629);
             this.propertyGrid1.TabIndex = 0;
             // 
             // menuStrip1
             // 
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(685, 24);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(12, 4, 0, 4);
+            this.menuStrip1.Size = new System.Drawing.Size(1370, 44);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -62,13 +65,13 @@
             this.loadConfigurationFileToolStripMenuItem,
             this.saveConfigurationToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(64, 36);
             this.fileToolStripMenuItem.Text = "&File";
             // 
             // loadConfigurationFileToolStripMenuItem
             // 
             this.loadConfigurationFileToolStripMenuItem.Name = "loadConfigurationFileToolStripMenuItem";
-            this.loadConfigurationFileToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.loadConfigurationFileToolStripMenuItem.Size = new System.Drawing.Size(173, 38);
             this.loadConfigurationFileToolStripMenuItem.Text = "&Open";
             this.loadConfigurationFileToolStripMenuItem.Visible = false;
             this.loadConfigurationFileToolStripMenuItem.Click += new System.EventHandler(this.loadConfigurationFileToolStripMenuItem_Click);
@@ -76,21 +79,23 @@
             // saveConfigurationToolStripMenuItem
             // 
             this.saveConfigurationToolStripMenuItem.Name = "saveConfigurationToolStripMenuItem";
-            this.saveConfigurationToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveConfigurationToolStripMenuItem.Size = new System.Drawing.Size(173, 38);
             this.saveConfigurationToolStripMenuItem.Text = "&Save";
             this.saveConfigurationToolStripMenuItem.Click += new System.EventHandler(this.saveConfigurationToolStripMenuItem_Click);
             // 
             // ClipBoardConfigurator
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(685, 350);
+            this.ClientSize = new System.Drawing.Size(1370, 673);
             this.Controls.Add(this.propertyGrid1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "ClipBoardConfigurator";
             this.Text = "ClipBoard Configurator";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ClipBoardConfigurator_FormClosed);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);

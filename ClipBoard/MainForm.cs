@@ -407,7 +407,7 @@ namespace ClipBoard
             }
             else if (e.Button == MouseButtons.Right)
             {
-                var configurator = new ClipBoardConfigurator(_settings);
+                var configurator = new ClipBoardConfigurator(_settings, true);
                 configurator.ShowDialog();
             }
         }
