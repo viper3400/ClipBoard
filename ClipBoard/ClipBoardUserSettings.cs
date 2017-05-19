@@ -70,7 +70,7 @@ namespace ClipBoard
         [UserScopedSetting]
         [Category("ClipBoard")]
         [DefaultSettingValue("false")]
-        [Description("Set true if Clipboard manager should run on Windows startup.")]
+        [Description("Set true if Clipboard Manager should run on Windows startup.")]
         public bool RunOnStartup
         {
             get { return (bool)this["RunOnStartup"]; }

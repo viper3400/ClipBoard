@@ -17,7 +17,6 @@ namespace ClipBoard
         private static Win32Hooks.LowLevelKeyboardProc _proc = HookCallback;
         private static IntPtr _hookID = IntPtr.Zero;
         private static MainForm mf;
-        public static string ContentFileName;
         public static string SettingsFileName;
 
         /// <summary>
@@ -26,12 +25,10 @@ namespace ClipBoard
         [STAThread]
         static void Main()
         {
-            // check if a content file has been provided in command line,
-            // otherwise set its name to the users %APDDATA% 
+            // check if a settings file has been provided in command line
+            // otherwise app will use default values.
             var commandLineArgs = Environment.GetCommandLineArgs();
-            //ContentFileName = commandLineArgs.Length > 1 ? 
-            //    commandLineArgs[1] : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Clipboard//content.csv");
-
+          
             SettingsFileName = commandLineArgs.Length > 1 ? commandLineArgs[1] : "";
             _hookID = SetHook(_proc);
             Application.EnableVisualStyles();
