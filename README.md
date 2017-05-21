@@ -37,7 +37,7 @@ To open the configuration dialog right click on the window minimize icon (top ri
 
 **Note:** This is a breaking change from former versions. First command line argmunent has been used to select a differnt content file. If you like to continue to use a content file in a custom location you now have to set this via configuration dialog.
 
-### Option "ContentFile"
+#### Option "ContentFile"
 *Default:  %APPDATA%\Clipboard\content.csv*
 
 Path and filename of the file where your ClipBoard content will be saved.
