@@ -72,14 +72,14 @@
   <ItemGroup>
     <Compile Include="ClipBoardListController.cs" />
     <Compile Include="ClipBoardRecord.cs" />
-    <Compile Include="ClipBoardUserSettings.cs" />
-    <Compile Include="ClipBoardConfigurator.cs">
+    <Compile Include="Configuration\ClipBoardUserSettings.cs" />
+    <Compile Include="Configuration\ClipBoardConfigurator.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ClipBoardConfigurator.Designer.cs">
+    <Compile Include="Configuration\ClipBoardConfigurator.Designer.cs">
       <DependentUpon>ClipBoardConfigurator.cs</DependentUpon>
     </Compile>
-    <Compile Include="PortableSettingsProvider.cs" />
+    <Compile Include="Configuration\PortableSettingsProvider.cs" />
     <Compile Include="CsvPersistenceController.cs" />
     <Compile Include="IPersistenceController.cs" />
     <Compile Include="Win32Hooks.cs" />
@@ -92,7 +92,7 @@
     <Compile Include="Msgs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="ClipBoardConfigurator.resx">
+    <EmbeddedResource Include="Configuration\ClipBoardConfigurator.resx">
       <DependentUpon>ClipBoardConfigurator.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
