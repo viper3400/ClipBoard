@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using FMUtils.KeyboardHook;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,35 @@ namespace ClipBoard
             _ClipboardViewerNext = ClipBoard.Win32Hooks.SetClipboardViewer(this.Handle);
             maxCopyTextLength = _settings.MaxCopyTextLength;
             HandleStartupSetting(_settings.RunOnStartup);
+            var keyboardHook = new Hook("Global Action Hook");
+            keyboardHook.KeyDownEvent += KeyDownHandler;
+
+            if (_settings.StartMinimized)
+            {
+                hideScreen();
+            }
+        }
+
+        private void KeyDownHandler(KeyboardHookEventArgs e)
+        {
+            // handle keydown event here
+            // Such as by checking if e (KeyboardHookEventArgs) matches the key you're interested in
+            Keys userHotKey;
+            Enum.TryParse<Keys>(_settings.HotKey, out userHotKey);
+
+            // helper variables:
+            // get the modifier settings from settings class and evaluate if they match the
+            // current pressed buttons
+            var isCtrlModifierValid = _settings.UseCtrlKey == e.isCtrlPressed ? true : false;
+            var isShiftModifierValid = _settings.UseShiftKey == e.isShiftPressed ? true : false;
+            var isAltModifierValid = _settings.UseAltKey == e.isAltPressed ? true : false;
+            var isWindModifierVaild = _settings.UseWindowsKey == e.isWinPressed ? true : false;
+
+            // if all conditions are true and align with the settings show the Clipboard screen
+            if (e.Key == userHotKey && isCtrlModifierValid && isShiftModifierValid && isAltModifierValid && isWindModifierVaild)
+            {
+                showScreen();
+            }
         }
 
         private void HandleStartupSetting(bool RunOnStartup)

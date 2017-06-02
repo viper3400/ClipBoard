@@ -14,7 +14,7 @@ namespace ClipBoard
     {
         private const int HTCAPTION = 0x2;
         private const int WH_KEYBOARD_LL = 13;
-        private static Win32Hooks.LowLevelKeyboardProc _proc = HookCallback;
+       // private static Win32Hooks.LowLevelKeyboardProc _proc = HookCallback;
         private static IntPtr _hookID = IntPtr.Zero;
         private static MainForm mf;
         public static string SettingsFileName;
@@ -30,7 +30,7 @@ namespace ClipBoard
             var commandLineArgs = Environment.GetCommandLineArgs();
           
             SettingsFileName = commandLineArgs.Length > 1 ? commandLineArgs[1] : "";
-            _hookID = SetHook(_proc);
+          //  _hookID = SetHook(_proc);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             mf = new MainForm();
@@ -38,26 +38,26 @@ namespace ClipBoard
             Win32Hooks.UnhookWindowsHookEx(_hookID);
         }
 
-        private static IntPtr SetHook(Win32Hooks.LowLevelKeyboardProc proc)
-        {
-            using (Process curProcess = Process.GetCurrentProcess())
-            using (ProcessModule curModule = curProcess.MainModule)
-            {
-                return Win32Hooks.SetWindowsHookEx(WH_KEYBOARD_LL, proc,
-                    Win32Hooks.GetModuleHandle(curModule.ModuleName), 0);
-            }
-        }
+        //private static IntPtr SetHook(Win32Hooks.LowLevelKeyboardProc proc)
+        //{
+        //    using (Process curProcess = Process.GetCurrentProcess())
+        //    using (ProcessModule curModule = curProcess.MainModule)
+        //    {
+        //        return Win32Hooks.SetWindowsHookEx(WH_KEYBOARD_LL, proc,
+        //            Win32Hooks.GetModuleHandle(curModule.ModuleName), 0);
+        //    }
+        //}
 
-        private static IntPtr HookCallback(
-        int nCode, IntPtr wParam, IntPtr lParam)
-        {
-            if (nCode >= 0 && wParam == (IntPtr)Msgs.WM_KEYDOWN)
-            {
-                int vkCode = Marshal.ReadInt32(lParam);
-                Keys keys = (Keys)vkCode;
-                mf.keyPressedHandler(keys);
-            }
-            return Win32Hooks.CallNextHookEx(_hookID, nCode, wParam, lParam);
-        }
+        //private static IntPtr HookCallback(
+        //int nCode, IntPtr wParam, IntPtr lParam)
+        //{
+        //    if (nCode >= 0 && wParam == (IntPtr)Msgs.WM_KEYDOWN)
+        //    {
+        //        int vkCode = Marshal.ReadInt32(lParam);
+        //        Keys keys = (Keys)vkCode;
+        //        mf.keyPressedHandler(keys);
+        //    }
+        //    return Win32Hooks.CallNextHookEx(_hookID, nCode, wParam, lParam);
+        //}
     }
 }
