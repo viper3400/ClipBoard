@@ -60,7 +60,7 @@ namespace ClipBoard
         [UserScopedSetting]
         [Category("ClipBoard HotKey")]
         [DefaultSettingValue("Space")]
-        [Description("CTRL + HotKey will open ClipBoard Manager window when minimized. See https://msdn.microsoft.com/de-de/library/system.windows.forms.keys(v=vs.110).aspx for available keys.")]
+        [Description("ModifierKeys + HotKey will open ClipBoard Manager window when minimized. See https://msdn.microsoft.com/de-de/library/system.windows.forms.keys(v=vs.110).aspx for available keys.")]
         public string HotKey
         {
             get { return (string)this["HotKey"]; }
