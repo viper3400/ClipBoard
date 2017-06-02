@@ -50,14 +50,37 @@ Number of items which are shown in the frequent list. Set this to 0 to disable t
 #### Option "HotKey"
 *Default: Space*
 
-CTRL + HotKey will open ClipBoard Manager window when minimized. See https://msdn.microsoft.com/de-de/library/system.windows.forms.keys(v=vs.110).aspx for available keys (case sensitive!)
+ModifierKeys + HotKey will open ClipBoard Manager window when minimized. See https://msdn.microsoft.com/de-de/library/system.windows.forms.keys(v=vs.110).aspx for available keys (case sensitive!). For modifier keys see options UseCtrlKey, UseShiftKey, UseAltKey and UseWindowsKey.
 
-**Note:** CTRL key is given at this time and not configurable. You may only choose the additional key.
+#### Option "UseCtrlKey"
+*Default: true*
+
+Use CTRL key as modifier key to open ClipBoard Manager window.
+
+#### Option "UseShiftKey"
+*Default: false*
+
+Use SHIFT key as modifier key to open ClipBoard Manager window.
+
+#### Option "UseAltKey"
+*Default: false*
+
+Use ALT key as modifier key to open ClipBoard Manager window.
+
+#### Option "UseWindowsKey"
+*Default: false*
+
+Use WINDOWS key as modifier key to open ClipBoard Manager window.
 
 #### Option "RunOnStartup"
 *Default: false*
 
 Set true if Clipboard Manager should run on Windows startup.
+
+#### Option "StartMinimized"
+*Default: false*
+
+Set true if Clipboard Manager should run minimized after start.
 
 #### Option "MaxCopyTextLength"
 *Default: false*
