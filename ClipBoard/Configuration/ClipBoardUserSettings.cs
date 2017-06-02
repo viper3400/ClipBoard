@@ -120,7 +120,7 @@ namespace ClipBoard
         [UserScopedSetting]
         [Category("ClipBoard")]
         [DefaultSettingValue("false")]
-        [Description("Set true if Clipboard Manager should run on Windows startup.")]
+        [Description("Set true if Clipboard Manager should run on minimized on startup.")]
         public bool StartMinimized
         {
             get { return (bool)this["StartMinimized"]; }
