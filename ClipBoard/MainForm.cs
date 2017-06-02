@@ -46,7 +46,16 @@ namespace ClipBoard
             Keys userHotKey;
             Enum.TryParse<Keys>(_settings.HotKey, out userHotKey);
 
-            if (e.Key == userHotKey && e.isCtrlPressed)
+            // helper variables:
+            // get the modifier settings from settings class and evaluate if they match the
+            // current pressed buttons
+            var isCtrlModifierValid = _settings.UseCtrlKey == e.isCtrlPressed ? true : false;
+            var isShiftModifierValid = _settings.UseShiftKey == e.isShiftPressed ? true : false;
+            var isAltModifierValid = _settings.UseAltKey == e.isAltPressed ? true : false;
+            var isWindModifierVaild = _settings.UseWindowsKey == e.isWinPressed ? true : false;
+
+            // if all conditions are true and align with the settings show the Clipboard screen
+            if (e.Key == userHotKey && isCtrlModifierValid && isShiftModifierValid && isAltModifierValid && isWindModifierVaild)
             {
                 showScreen();
             }
