@@ -37,6 +37,11 @@ namespace ClipBoard
             HandleStartupSetting(_settings.RunOnStartup);
             var keyboardHook = new Hook("Global Action Hook");
             keyboardHook.KeyDownEvent += KeyDownHandler;
+
+            if (_settings.StartMinimized)
+            {
+                hideScreen();
+            }
         }
 
         private void KeyDownHandler(KeyboardHookEventArgs e)

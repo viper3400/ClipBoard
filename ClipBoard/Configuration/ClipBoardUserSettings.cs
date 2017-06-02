@@ -69,7 +69,7 @@ namespace ClipBoard
 
         [UserScopedSetting]
         [Category("ClipBoard HotKey")]
-        [DefaultSettingValue("True")]
+        [DefaultSettingValue("true")]
         [Description("Modfierkey in addition to HotKey")]
         public bool UseCtrlKey
         {
@@ -79,7 +79,7 @@ namespace ClipBoard
 
         [UserScopedSetting]
         [Category("ClipBoard HotKey")]
-        [DefaultSettingValue("False")]
+        [DefaultSettingValue("false")]
         [Description("Modfierkey in addition to HotKey")]
         public bool UseShiftKey
         {
@@ -89,7 +89,7 @@ namespace ClipBoard
 
         [UserScopedSetting]
         [Category("ClipBoard HotKey")]
-        [DefaultSettingValue("False")]
+        [DefaultSettingValue("false")]
         [Description("Modfierkey in addition to HotKey")]
         public bool UseAltKey
         {
@@ -99,7 +99,7 @@ namespace ClipBoard
 
         [UserScopedSetting]
         [Category("ClipBoard HotKey")]
-        [DefaultSettingValue("False")]
+        [DefaultSettingValue("false")]
         [Description("Modfierkey in addition to HotKey")]
         public bool UseWindowsKey
         {
@@ -115,6 +115,16 @@ namespace ClipBoard
         {
             get { return (bool)this["RunOnStartup"]; }
             set { this["RunOnStartup"] = value; }
+        }
+
+        [UserScopedSetting]
+        [Category("ClipBoard")]
+        [DefaultSettingValue("false")]
+        [Description("Set true if Clipboard Manager should run on Windows startup.")]
+        public bool StartMinimized
+        {
+            get { return (bool)this["StartMinimized"]; }
+            set { this["StartMinimized"] = value; }
         }
     }
 }
