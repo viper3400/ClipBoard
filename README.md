@@ -84,6 +84,7 @@ Set true if Clipboard Manager should run minimized after start.
 
 #### Option "MaxCopyTextLength"
 *Default: false*
+
 Text with more chars than this value won't be handled by ClipBoard.
 
 ### Enjoy!
