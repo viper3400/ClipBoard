@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using FMUtils.KeyboardHook;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,21 @@ namespace ClipBoard
             _ClipboardViewerNext = ClipBoard.Win32Hooks.SetClipboardViewer(this.Handle);
             maxCopyTextLength = _settings.MaxCopyTextLength;
             HandleStartupSetting(_settings.RunOnStartup);
+            var keyboardHook = new Hook("Global Action Hook");
+            keyboardHook.KeyDownEvent += KeyDownHandler;
+        }
+
+        private void KeyDownHandler(KeyboardHookEventArgs e)
+        {
+            // handle keydown event here
+            // Such as by checking if e (KeyboardHookEventArgs) matches the key you're interested in
+            Keys userHotKey;
+            Enum.TryParse<Keys>(_settings.HotKey, out userHotKey);
+
+            if (e.Key == userHotKey && e.isCtrlPressed)
+            {
+                showScreen();
+            }
         }
 
         private void HandleStartupSetting(bool RunOnStartup)
