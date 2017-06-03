@@ -171,7 +171,7 @@ namespace ClipBoard
             this.labelMinimize.Size = new System.Drawing.Size(18, 26);
             this.labelMinimize.TabIndex = 3;
             this.labelMinimize.Text = "-";
-            this.labelMinimize.Click += new System.EventHandler(this.labelMinimize_Click);
+            this.labelMinimize.MouseClick += new System.Windows.Forms.MouseEventHandler(this.labelMinimize_Click);
             // 
             // MainForm
             // 

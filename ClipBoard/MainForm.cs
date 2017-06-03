@@ -1,8 +1,8 @@
-﻿using System;
+﻿using FMUtils.KeyboardHook;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsInput;
@@ -13,60 +13,100 @@ namespace ClipBoard
     public partial class MainForm : Form
     {
         public ListView list;
-        private static string contentFileName = Program.ContentFileName;
-        private static int maxCopyTextLength = 10000;
-        private List<ClipBoardRecord> savedItems;
-        private List<ClipBoardRecord> frequentItems;
-        private List<ClipBoardRecord> recentItems;
+        private static string _settingsFile = Program.SettingsFileName;
+        private static int maxCopyTextLength;
         private bool allowSaveAsNowLoaded = false;
+        private ClipBoardUserSettings _settings;
         IntPtr _ClipboardViewerNext;
-
-        [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
-        private static extern IntPtr CreateRoundRectRgn
-        (
-            int nLeftRect, // x-coordinate of upper-left corner
-            int nTopRect, // y-coordinate of upper-left corner
-            int nRightRect, // x-coordinate of lower-right corner
-            int nBottomRect, // y-coordinate of lower-right corner
-            int nWidthEllipse, // height of ellipse
-            int nHeightEllipse // width of ellipse
-         );
+        IPersistenceController _persistenceController;
+        ClipBoardListController _listController;
 
         public MainForm()
         {
             InitializeComponent();
             list = this.listView;
             this.FormBorderStyle = FormBorderStyle.None;
-            savedItems = new List<ClipBoardRecord>(10);
-            recentItems = new List<ClipBoardRecord>(10);
-            frequentItems = new List<ClipBoardRecord>(10);
+            _persistenceController = new CsvPersistenceController();
+            _settings = new ClipBoardUserSettings(_settingsFile);
+            _settings.SettingsSaving += SettingsSaving;
+            _listController = new ClipBoardListController(_settings);
             this.MouseDown += new MouseEventHandler(Form_MouseDown);
             this.labelClipBoardManager.MouseDown += new MouseEventHandler(Form_MouseDown);
-            _ClipboardViewerNext = ClipBoard.Program.SetClipboardViewer(this.Handle);
+            _ClipboardViewerNext = ClipBoard.Win32Hooks.SetClipboardViewer(this.Handle);
+            maxCopyTextLength = _settings.MaxCopyTextLength;
+            HandleStartupSetting(_settings.RunOnStartup);
+            var keyboardHook = new Hook("Global Action Hook");
+            keyboardHook.KeyDownEvent += KeyDownHandler;
+
+            if (_settings.StartMinimized)
+            {
+                hideScreen();
+            }
+        }
+
+        private void KeyDownHandler(KeyboardHookEventArgs e)
+        {
+            // handle keydown event here
+            // Such as by checking if e (KeyboardHookEventArgs) matches the key you're interested in
+            Keys userHotKey;
+            Enum.TryParse<Keys>(_settings.HotKey, out userHotKey);
+
+            // helper variables:
+            // get the modifier settings from settings class and evaluate if they match the
+            // current pressed buttons
+            var isCtrlModifierValid = _settings.UseCtrlKey == e.isCtrlPressed ? true : false;
+            var isShiftModifierValid = _settings.UseShiftKey == e.isShiftPressed ? true : false;
+            var isAltModifierValid = _settings.UseAltKey == e.isAltPressed ? true : false;
+            var isWindModifierVaild = _settings.UseWindowsKey == e.isWinPressed ? true : false;
+
+            // if all conditions are true and align with the settings show the Clipboard screen
+            if (e.Key == userHotKey && isCtrlModifierValid && isShiftModifierValid && isAltModifierValid && isWindModifierVaild)
+            {
+                showScreen();
+            }
+        }
+
+        private void HandleStartupSetting(bool RunOnStartup)
+        {
+            if (RunOnStartup)
+            {
+                var path = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(path, true);
+                key.SetValue("ClipBoard", Application.ExecutablePath.ToString());
+            }
+            else
+            {
+                var path = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(path, true);
+                key.DeleteValue("Clipboard", false);
+            }
+        }
+        private void SettingsSaving(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            HandleStartupSetting(_settings.RunOnStartup);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
             list.TileSize = System.Drawing.Size.Empty;
-            loadContent(contentFileName);
+            loadContent(_settings.ContentFile);
             updateList();
             allowSaveAsNowLoaded = true;
         }
 
         private void MainForm_FormClosing(Object sender, FormClosingEventArgs e)
         {
-            ClipBoard.Program.ChangeClipboardChain(this.Handle, _ClipboardViewerNext);
+            ClipBoard.Win32Hooks.ChangeClipboardChain(this.Handle, _ClipboardViewerNext);
         }
 
         private void updateList()
         {
             list.Items.Clear();
-            ClipBoardRecord mostCoppiedRecord = new ClipBoardRecord();
-            ClipBoardRecord mostPastedRecord = new ClipBoardRecord();
+
             int i = 1;
 
             // Add in saved records
-            foreach (ClipBoardRecord s in savedItems)
+            foreach (ClipBoardRecord s in _listController.SavedItems)
             {
                 ListViewItem lvi =
                     new ListViewItem(new string[] { (i++).ToString(),
@@ -78,32 +118,9 @@ namespace ClipBoard
                 list.Groups[0].Items.Add(lvi);
             }
 
-            // Calcualte both the most coppied and most pasted records
-            foreach (ClipBoardRecord s in recentItems)
-            {
-                // work out for use later on the most coppied record
-                if (mostCoppiedRecord.CoppiedCount < s.CoppiedCount)
-                {
-                    mostCoppiedRecord = s;
-                }
-                // work out for use later on the most pasted record
-                if (mostPastedRecord.PastedCount < s.PastedCount)
-                {
-                    mostPastedRecord = s;
-                }
-            }
+            _listController.FrequentItems.Clear();
 
-            frequentItems.Clear();
-            if (mostCoppiedRecord.CoppiedCount > 0)
-            {
-                frequentItems.Add(mostCoppiedRecord);
-            }
-            // is mostCoppied is the same as mostPasted then only add one instance
-            if (mostPastedRecord.PastedCount > 0 && mostCoppiedRecord != mostPastedRecord)
-            {
-                frequentItems.Add(mostPastedRecord);
-            }
-            foreach (ClipBoardRecord s in frequentItems)
+            foreach (ClipBoardRecord s in _listController.FrequentItems)
             {
                 ListViewItem lvi =
                     new ListViewItem(new string[] { (i++).ToString(),
@@ -117,7 +134,7 @@ namespace ClipBoard
             }
 
             // finally populate the recent list
-            foreach (ClipBoardRecord s in recentItems)
+            foreach (ClipBoardRecord s in _listController.RecentItems)
             {
                 ListViewItem lvi =
                     new ListViewItem(new string[] { (i++).ToString(),
@@ -130,39 +147,13 @@ namespace ClipBoard
             }
 
             //save to csv
-            writeToCsv();
+            if (allowSaveAsNowLoaded)
+            {
+                _persistenceController.SaveToFile(_settings.ContentFile, _listController.SavedItems, _listController.RecentItems);
+            }
 
             //resize the form to fit the number of items
             resizeForm();
-        }
-
-        private void writeToCsv()
-        {
-            // this function is a candadiate for error handling
-            if (allowSaveAsNowLoaded)
-            {
-                string[] lines = new string[savedItems.Count + Math.Min(recentItems.Count, 30)];
-                int i = 0;
-                foreach (ClipBoardRecord s in savedItems)
-                {
-                    lines[i++] = "|," + s.CoppiedCount + "," + s.PastedCount + "," + "saved: " + Regex.Escape(s.Content);
-                }
-                foreach (ClipBoardRecord s in recentItems)
-                {
-                    lines[i++] = "|," + s.CoppiedCount + "," + s.PastedCount + "," + "recent:" + Regex.Escape(s.Content);
-                    if (i >= savedItems.Count + 30)
-                    {
-                        break;
-                    }
-                }
-
-                if (!Directory.Exists(Path.GetDirectoryName(contentFileName)))
-                {
-                    Directory.CreateDirectory(Path.GetDirectoryName(contentFileName));
-                }
-
-                File.WriteAllLines(contentFileName, lines);
-            }
         }
 
         /// <summary>
@@ -178,56 +169,26 @@ namespace ClipBoard
                                     + ((listView.Items.Count) + 100);
             }
 
-            Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
+            Region = System.Drawing.Region.FromHrgn(Win32Hooks.CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
             linkLabelGitHub.Top = listView.Top + listView.Height + 5;
 
         }
 
         private void loadContent(string contentFileName)
         {
-            char[] delimiterChars = { ',' };
-            string[] fileFields;
-            string[] lines = File.Exists(contentFileName) ? File.ReadAllLines(contentFileName) : new string[] { };
-            string type;
-
-            foreach (string s in lines)
-            {
-                ClipBoardRecord rec = new ClipBoardRecord();
-
-                // Find out if we have a saved file containing counts
-                if (s.StartsWith("|")) // then new file format 
-                {
-                    fileFields = s.Split(delimiterChars, 4);
-                    rec.CoppiedCount = int.Parse(fileFields[1]);
-                    rec.PastedCount = int.Parse(fileFields[2]);
-                    rec.Content = Regex.Unescape(fileFields[3].Substring(7));
-                    type = fileFields[3].Substring(0, 7);
-                }
-                else // handle previous file format
-                {
-                    rec.Content = Regex.Unescape(s.Substring(7));
-                    rec.CoppiedCount = 0;
-                    rec.PastedCount = 0;
-                    type = s.Substring(0, 7);
-                }
-
-                // now have have the data add it to the relevent list
-                if (type.StartsWith("saved:"))
-                {
-                    savedItems.Add(rec);
-                }
-                else if (type.StartsWith("recent:"))
-                {
-                    recentItems.Add(rec);
-                }
-            }
+            var items = _persistenceController.LoadFromFile(contentFileName);
+            _listController.RecentItems = items.Where(i => i.Key == "recent").Select(i => i.Value).FirstOrDefault();
+            _listController.SavedItems = items.Where(i => i.Key == "saved").Select(i => i.Value).FirstOrDefault();
         }
 
         public void keyPressedHandler(Keys keys)
         {
             Keys ModKeys = ModifierKeys; // save locally to aid debugging
-            //control-` pressed or control-shift-b
-            if ((ModKeys & Keys.Control) == Keys.Control && (keys == Keys.Oemtilde || keys == Keys.Space))
+
+            Keys userHotKey;
+            Enum.TryParse<Keys>(_settings.HotKey, out userHotKey);
+
+            if ((ModKeys & Keys.Control) == Keys.Control && (keys == Keys.Oemtilde || keys == userHotKey))
             {
                 showScreen();
             }
@@ -236,37 +197,6 @@ namespace ClipBoard
             if ((ModKeys & Keys.Control) == Keys.Control && keys == Keys.V)
             {
                 recordPaste();
-            }
-        }
-
-        // Add either new record or increment existing record counter
-        private void addClipBoardRecord(string content)
-        {
-            ClipBoardRecord rec;
-
-            //accept content only of not empty and not too big
-            if (content.Length != 0 && content.Length < maxCopyTextLength)
-            {
-                rec = getClipBoardRecordViaContent(content);
-
-                if (rec == null) // this is a new content
-                {
-                    // add a new record to the list
-                    rec = new ClipBoardRecord(content, 1, 0);
-                    recentItems.Insert(0, rec);
-                }
-                else
-                {
-                    // increment the existing matching record
-                    rec.CoppiedCount++;
-                }
-
-                //limit number of recent items
-                if (recentItems.Count > 25)
-                {
-                    recentItems.RemoveAt(recentItems.Count - 1);
-                }
-                updateList();
             }
         }
 
@@ -295,10 +225,10 @@ namespace ClipBoard
             ClipBoardRecord clipBoardRecord;
             if (Clipboard.ContainsText() && Clipboard.GetText().Length < maxCopyTextLength)
             {
-                clipBoardRecord = getClipBoardRecordViaContent(Clipboard.GetText());
+                clipBoardRecord = _listController.GetClipBoardRecordViaContent(Clipboard.GetText());
                 if (clipBoardRecord != null)
                 {
-                    clipBoardRecord.PastedCount++;
+                    _listController.IncrementPasted(clipBoardRecord.Content);
                     updateList();
                 }
             }
@@ -307,7 +237,8 @@ namespace ClipBoard
         private void handleClipboardChanged()
         {
 
-            addClipBoardRecord(Clipboard.GetText());
+            _listController.AddClipBoardRecord(Clipboard.GetText());
+            updateList();
         }
 
         private void listView_DoubleClick(object sender, EventArgs e)
@@ -347,24 +278,10 @@ namespace ClipBoard
             {
                 int index = this.list.SelectedIndices[0];
                 string content = this.list.Items[index].SubItems[3].Text;
-                incrementPasted(content);
+                updateList();
+
                 Clipboard.SetText(content);
             }
-        }
-
-        private void incrementPasted(string content)
-        {
-            foreach (ClipBoardRecord s in savedItems)
-            {
-                if (s.Content == content)
-                    s.PastedCount++;
-            }
-            foreach (ClipBoardRecord s in recentItems)
-            {
-                if (s.Content == content)
-                    s.PastedCount++;
-            }
-            updateList();
         }
 
         private void listView_MouseClick(object sender, MouseEventArgs e)
@@ -391,43 +308,18 @@ namespace ClipBoard
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ClipBoardRecord rec;
-            rec = getClipBoardRecordViaContent(list.Items[list.SelectedIndices[0]].SubItems[3].Text);
-            savedItems.Add(rec);
-            recentItems.Remove(rec);
+            rec = _listController.GetClipBoardRecordViaContent(list.Items[list.SelectedIndices[0]].SubItems[3].Text);
+            _listController.SavedItems.Add(rec);
+            _listController.RecentItems.Remove(rec);
             updateList();
         }
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            removeClipBoardRecordViaContent(list.SelectedItems[0].SubItems[3].Text);
+            _listController.RemoveClipBoardRecordViaContent(list.SelectedItems[0].SubItems[3].Text);
             updateList();
         }
 
-        // Given a content this function will remove a clipboard 
-        // record if it exists in either the saved or recent list
-        private void removeClipBoardRecordViaContent(string content)
-        {
-            // if ti exists it will only be in one list. 
-            // so its safe to try and remove from both.
-            savedItems.Remove(getClipBoardRecordViaContent(content));
-            recentItems.Remove(getClipBoardRecordViaContent(content));
-        }
-
-        private ClipBoardRecord getClipBoardRecordViaContent(string content)
-        {
-            ClipBoardRecord foundRecord = null;
-            foreach (ClipBoardRecord rec in savedItems)
-            {
-                if (rec.Content == content)
-                    foundRecord = rec;
-            }
-            foreach (ClipBoardRecord rec in recentItems)
-            {
-                if (rec.Content == content)
-                    foundRecord = rec;
-            }
-            return foundRecord;
-        }
 
         private void MainForm_Resize(object sender, EventArgs e)
         {
@@ -466,14 +358,14 @@ namespace ClipBoard
                 Constants in Windows API
                 0x2 = HTCAPTION - Application Title Bar
                 */
-                ClipBoard.Program.ReleaseCapture();
-                ClipBoard.Program.SendMessage(Handle, (int)ClipBoard.Program.Msgs.WM_NCLBUTTONDOWN, (IntPtr)0x2, (IntPtr)0);
+                ClipBoard.Win32Hooks.ReleaseCapture();
+                ClipBoard.Win32Hooks.SendMessage(Handle, (int)ClipBoard.Msgs.WM_NCLBUTTONDOWN, (IntPtr)0x2, (IntPtr)0);
             }
         }
         protected override void WndProc(ref Message m)
         {
 
-            switch ((ClipBoard.Program.Msgs)m.Msg)
+            switch ((ClipBoard.Msgs)m.Msg)
             {
                 //
                 // The WM_DRAWCLIPBOARD message is sent to the first window 
@@ -481,7 +373,7 @@ namespace ClipBoard
                 // clipboard changes. This enables a clipboard viewer 
                 // window to display the new content of the clipboard. 
                 //
-                case ClipBoard.Program.Msgs.WM_DRAWCLIPBOARD:
+                case ClipBoard.Msgs.WM_DRAWCLIPBOARD:
 
                     handleClipboardChanged();
 
@@ -490,7 +382,7 @@ namespace ClipBoard
                     // must call the SendMessage function to pass the message 
                     // on to the next window in the clipboard viewer chain.
                     //
-                    ClipBoard.Program.SendMessage(_ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
+                    ClipBoard.Win32Hooks.SendMessage(_ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
                     break;
 
 
@@ -499,7 +391,7 @@ namespace ClipBoard
                 // in the clipboard viewer chain when a window is being 
                 // removed from the chain. 
                 //
-                case ClipBoard.Program.Msgs.WM_CHANGECBCHAIN:
+                case ClipBoard.Msgs.WM_CHANGECBCHAIN:
 
                     // When a clipboard viewer window receives the WM_CHANGECBCHAIN message, 
                     // it should call the SendMessage function to pass the message to the 
@@ -523,7 +415,7 @@ namespace ClipBoard
                     }
                     else
                     {
-                        ClipBoard.Program.SendMessage(_ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
+                        ClipBoard.Win32Hooks.SendMessage(_ClipboardViewerNext, m.Msg, m.WParam, m.LParam);
                     }
                     break;
 
@@ -537,14 +429,22 @@ namespace ClipBoard
             }
         }
 
-        private void labelMinimize_Click(object sender, EventArgs e)
-        {
-            hideScreen();
-        }
-
         private void linkLabelGitHub_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start(linkLabelGitHub.Text);
+        }
+
+        private void labelMinimize_Click(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                hideScreen();
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                var configurator = new ClipBoardConfigurator(_settings, true);
+                configurator.ShowDialog();
+            }
         }
     }
 }

@@ -23,10 +23,68 @@ clipboard when a "Copy" is performed.
 
 ### Data Storage
 
-By default, your saved text snippets are stored in %APPDATA%\Clipboad\content.csv. This file will be created if it not exists, yet. If you like to use another file in another location you can pass the full filepath as first command line argument to ClipBoard.exe
+By default, your saved text snippets are stored in %APPDATA%\Clipboard\content.csv. This file will be created if it not exists, yet. If you like to use another file in another location see *Configuration*.
 
-``ClipBoard.exe D:\MyClipboardContent\content.csv``
+### RunOnStartup
 
-You may also drag&drop your data file on ClipBoard.exe in Windows Explorer.
+You can configure ClipBoard Manager start on Windows startup. See *Configuration*.
+
+### Configuration
+
+To open the configuration dialog right click on the window minimize icon (top right). The configuration dialog will show. By default settings are stored in  %APPDATA%\Clipboard\clipboard.settings. This file will be created if it not exists. If you like to use another location and file you can pass it as the first parameter when calling ClipBoard.exe
+
+``ClipBoard.exe D:\MyClipboard\custom.settings``
+
+**Note:** This is a breaking change from former versions. First command line argmunent has been used to select a differnt content file. If you like to continue to use a content file in a custom location you now have to set this via configuration dialog.
+
+#### Option "ContentFile"
+*Default:  %APPDATA%\Clipboard\content.csv*
+
+Path and filename of the file where your ClipBoard content will be saved.
+
+#### Option "MaxItemsInFrequentList"
+*Default: 10*
+
+Number of items which are shown in the frequent list. Set this to 0 to disable this feature.
+
+#### Option "HotKey"
+*Default: Space*
+
+ModifierKeys + HotKey will open ClipBoard Manager window when minimized. See https://msdn.microsoft.com/de-de/library/system.windows.forms.keys(v=vs.110).aspx for available keys (case sensitive!). For modifier keys see options UseCtrlKey, UseShiftKey, UseAltKey and UseWindowsKey.
+
+#### Option "UseCtrlKey"
+*Default: true*
+
+Use CTRL key as modifier key to open ClipBoard Manager window.
+
+#### Option "UseShiftKey"
+*Default: false*
+
+Use SHIFT key as modifier key to open ClipBoard Manager window.
+
+#### Option "UseAltKey"
+*Default: false*
+
+Use ALT key as modifier key to open ClipBoard Manager window.
+
+#### Option "UseWindowsKey"
+*Default: false*
+
+Use WINDOWS key as modifier key to open ClipBoard Manager window.
+
+#### Option "RunOnStartup"
+*Default: false*
+
+Set true if Clipboard Manager should run on Windows startup.
+
+#### Option "StartMinimized"
+*Default: false*
+
+Set true if Clipboard Manager should run minimized after start.
+
+#### Option "MaxCopyTextLength"
+*Default: false*
+
+Text with more chars than this value won't be handled by ClipBoard.
 
 ### Enjoy!

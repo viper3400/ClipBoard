@@ -54,7 +54,11 @@
     </StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FMUtils.KeyboardHook, Version=1.0.140.2145, Culture=neutral, PublicKeyToken=1acd76c568cde84e, processorArchitecture=MSIL">
+      <HintPath>..\packages\FMUtils.KeyboardHook.1.0.140.2145\lib\net40-Client\FMUtils.KeyboardHook.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -69,15 +73,31 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClipBoardListController.cs" />
     <Compile Include="ClipBoardRecord.cs" />
+    <Compile Include="Configuration\ClipBoardUserSettings.cs" />
+    <Compile Include="Configuration\ClipBoardConfigurator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\ClipBoardConfigurator.Designer.cs">
+      <DependentUpon>ClipBoardConfigurator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\PortableSettingsProvider.cs" />
+    <Compile Include="CsvPersistenceController.cs" />
+    <Compile Include="IPersistenceController.cs" />
+    <Compile Include="Win32Hooks.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Msgs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Configuration\ClipBoardConfigurator.resx">
+      <DependentUpon>ClipBoardConfigurator.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -91,6 +111,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="content.csv" />
+    <None Include="DepdencyGraph.dgml" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

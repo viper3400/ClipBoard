@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ClipBoard")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("An open-source clipboard manager.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("Open source developers: Yadong Wen, S. Victorino, MrCull, viper3400")]
 [assembly: AssemblyProduct("ClipBoard")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2014")]
+[assembly: AssemblyCopyright("Copyright © 2016 - 2017 Yadong Wen, S. Victorino, MrCull, viper3400")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
