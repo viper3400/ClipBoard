@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsInput;
 using WindowsInput.Native;
+using Dapplo.Log;
 
 namespace ClipBoard
 {
@@ -20,6 +21,7 @@ namespace ClipBoard
         IntPtr _ClipboardViewerNext;
         IPersistenceController _persistenceController;
         ClipBoardListController _listController;
+        private static readonly LogSource Log = new LogSource();
 
         public MainForm()
         {
@@ -45,7 +47,8 @@ namespace ClipBoard
         }
 
         private void KeyDownHandler(KeyboardHookEventArgs e)
-        {
+        {            
+            Log.Verbose().Write("KeyDownEvent Recognized.");
             // handle keydown event here
             // Such as by checking if e (KeyboardHookEventArgs) matches the key you're interested in
             Keys userHotKey;
@@ -58,10 +61,11 @@ namespace ClipBoard
             var isShiftModifierValid = _settings.UseShiftKey == e.isShiftPressed ? true : false;
             var isAltModifierValid = _settings.UseAltKey == e.isAltPressed ? true : false;
             var isWindModifierVaild = _settings.UseWindowsKey == e.isWinPressed ? true : false;
-
+            
             // if all conditions are true and align with the settings show the Clipboard screen
             if (e.Key == userHotKey && isCtrlModifierValid && isShiftModifierValid && isAltModifierValid && isWindModifierVaild)
             {
+                Log.Debug().Write("Conditions for show ClipBoard screen met.");
                 showScreen();
             }
         }

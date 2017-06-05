@@ -25,6 +25,9 @@ namespace ClipBoard
         [STAThread]
         static void Main()
         {
+            // Set logger
+            Dapplo.Log.LogSettings.RegisterDefaultLogger<NLogLogger>(Dapplo.Log.LogLevels.Verbose);            
+
             // check if a settings file has been provided in command line
             // otherwise app will use default values.
             var commandLineArgs = Environment.GetCommandLineArgs();
