@@ -68,6 +68,14 @@ namespace ClipBoard
                 Log.Debug().Write("Conditions for show ClipBoard screen met.");
                 showScreen();
             }
+
+            //control-v pressed
+            if (e.Key == Keys.V && e.isCtrlPressed)
+            {
+                Log.Verbose().Write("Paste value triggered by CTRL + V.");
+                recordPaste();
+            }
+
         }
 
         private void HandleStartupSetting(bool RunOnStartup)
@@ -183,25 +191,6 @@ namespace ClipBoard
             var items = _persistenceController.LoadFromFile(contentFileName);
             _listController.RecentItems = items.Where(i => i.Key == "recent").Select(i => i.Value).FirstOrDefault();
             _listController.SavedItems = items.Where(i => i.Key == "saved").Select(i => i.Value).FirstOrDefault();
-        }
-
-        public void keyPressedHandler(Keys keys)
-        {
-            Keys ModKeys = ModifierKeys; // save locally to aid debugging
-
-            Keys userHotKey;
-            Enum.TryParse<Keys>(_settings.HotKey, out userHotKey);
-
-            if ((ModKeys & Keys.Control) == Keys.Control && (keys == Keys.Oemtilde || keys == userHotKey))
-            {
-                showScreen();
-            }
-
-            //control-v pressed
-            if ((ModKeys & Keys.Control) == Keys.Control && keys == Keys.V)
-            {
-                recordPaste();
-            }
         }
 
         // code so show list screen
