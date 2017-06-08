@@ -15,7 +15,7 @@ clipboard when a "Copy" is performed.
 - Right click an item to save it to the frequently used items list on the top
 - Right click and click remove to remove the selected item
 - Minimize to hide the tool to system tray
-- ``Ctrl+```(ctrl+backtick) or Ctrl+Space to bring the tool up
+- Ctrl+Space to bring the tool up
 - Clicking on an item also hide the tool to system tray
 
 
@@ -86,5 +86,22 @@ Set true if Clipboard Manager should run minimized after start.
 *Default: false*
 
 Text with more chars than this value won't be handled by ClipBoard.
+
+### Logging
+For debugging reasons some log entries are implemented. By default no log file is written. To configure log file open the NLog.config file and uncomment the line
+
+```   <!--<logger name="*" writeTo="logfile" />--> ```
+
+This will enable the log file in %APPDATA%/ClipBoard/clipboard.log.
+
+### Deployment
+ClipBoard Manager is a portable application. When deploying you need to ship at least the following files:
+
+* ClipBoard.exe
+* Dapplo.Log.dll
+* FMUtils.KeyboardHook.dll
+* NLog.dll
+* WindowsInput.dll
+* NLog.config (optional)
 
 ### Enjoy!
