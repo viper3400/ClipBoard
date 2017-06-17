@@ -22,6 +22,7 @@ namespace ClipBoard
         IPersistenceController _persistenceController;
         ClipBoardListController _listController;
         private static readonly LogSource Log = new LogSource();
+        Hook keyboardHook;
 
         public MainForm()
         {
@@ -37,7 +38,7 @@ namespace ClipBoard
             _ClipboardViewerNext = ClipBoard.Win32Hooks.SetClipboardViewer(this.Handle);
             maxCopyTextLength = _settings.MaxCopyTextLength;
             HandleStartupSetting(_settings.RunOnStartup);
-            var keyboardHook = new Hook("Global Action Hook");
+            keyboardHook = new Hook("Global Action Hook");
             keyboardHook.KeyDownEvent += KeyDownHandler;
 
             if (_settings.StartMinimized)
@@ -108,6 +109,7 @@ namespace ClipBoard
 
         private void MainForm_FormClosing(Object sender, FormClosingEventArgs e)
         {
+            Log.Verbose().Write("FromClosing");
             ClipBoard.Win32Hooks.ChangeClipboardChain(this.Handle, _ClipboardViewerNext);
         }
 
