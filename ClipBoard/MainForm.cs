@@ -109,7 +109,7 @@ namespace ClipBoard
 
         private void MainForm_FormClosing(Object sender, FormClosingEventArgs e)
         {
-            Log.Verbose().Write("FromClosing");
+            Log.Verbose().Write("FormClosing");
             ClipBoard.Win32Hooks.ChangeClipboardChain(this.Handle, _ClipboardViewerNext);
         }
 
