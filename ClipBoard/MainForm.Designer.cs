@@ -189,7 +189,6 @@ namespace ClipBoard
             this.Name = "MainForm";
             this.Opacity = 0.96D;
             this.Text = "ClipBoard Manager";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.contextMenuStrip.ResumeLayout(false);
