@@ -22,6 +22,7 @@ namespace ClipBoard
         IPersistenceController _persistenceController;
         ClipBoardListController _listController;
         private static readonly LogSource Log = new LogSource();
+        Hook keyboardHook;
 
         public MainForm()
         {
@@ -37,7 +38,7 @@ namespace ClipBoard
             _ClipboardViewerNext = ClipBoard.Win32Hooks.SetClipboardViewer(this.Handle);
             maxCopyTextLength = _settings.MaxCopyTextLength;
             HandleStartupSetting(_settings.RunOnStartup);
-            var keyboardHook = new Hook("Global Action Hook");
+            keyboardHook = new Hook("Global Action Hook");
             keyboardHook.KeyDownEvent += KeyDownHandler;
 
             if (_settings.StartMinimized)
@@ -108,6 +109,7 @@ namespace ClipBoard
 
         private void MainForm_FormClosing(Object sender, FormClosingEventArgs e)
         {
+            Log.Verbose().Write("FormClosing");
             ClipBoard.Win32Hooks.ChangeClipboardChain(this.Handle, _ClipboardViewerNext);
         }
 
@@ -261,6 +263,7 @@ namespace ClipBoard
 
             // paste to curreMonkey talk font cursor
             await Task.Delay(500);
+            Log.Verbose().Write("Trigger CTRL + V to paste from inside ClipBoard");
             var inputSimulator = new InputSimulator();
             inputSimulator.Keyboard.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_V);
         }
@@ -269,6 +272,7 @@ namespace ClipBoard
         {
             if (this.list.SelectedIndices.Count > 0)
             {
+                Log.Verbose().Write("Copy text to clipboard");
                 int index = this.list.SelectedIndices[0];
                 string content = this.list.Items[index].SubItems[3].Text;
                 updateList();
@@ -356,8 +360,7 @@ namespace ClipBoard
             }
         }
         protected override void WndProc(ref Message m)
-        {
-
+        {           
             switch ((ClipBoard.Msgs)m.Msg)
             {
                 //
@@ -367,7 +370,7 @@ namespace ClipBoard
                 // window to display the new content of the clipboard. 
                 //
                 case ClipBoard.Msgs.WM_DRAWCLIPBOARD:
-
+                    Log.Verbose().Write("WM_DRAWCLIPBOARD");
                     handleClipboardChanged();
 
                     //
@@ -385,7 +388,7 @@ namespace ClipBoard
                 // removed from the chain. 
                 //
                 case ClipBoard.Msgs.WM_CHANGECBCHAIN:
-
+                    Log.Verbose().Write("WM_CHANGECBCHAIN");
                     // When a clipboard viewer window receives the WM_CHANGECBCHAIN message, 
                     // it should call the SendMessage function to pass the message to the 
                     // next window in the chain, unless the next window is the window 
