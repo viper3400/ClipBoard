@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dapplo.Log;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ namespace ClipBoard
         private List<ClipBoardRecord> _recentItems;
         private ClipBoardUserSettings _settings;
         private static int _maxCopyTextLength;
+        private static readonly LogSource Log = new LogSource();
 
         public ClipBoardListController(ClipBoardUserSettings SettingsProvider)
         {
@@ -46,6 +48,7 @@ namespace ClipBoard
         // Add either new record or increment existing record counter
         public void AddClipBoardRecord(string content)
         {
+            Log.Verbose().Write("Add content to clipboard.");
             ClipBoardRecord rec;
 
             //accept content only of not empty and not too big
@@ -68,9 +71,11 @@ namespace ClipBoard
                 //limit number of recent items
                 if (_recentItems.Count > 25)
                 {
+                    Log.Debug().Write("Recent items exceeded max size. Remove last item.");
                     _recentItems.RemoveAt(_recentItems.Count - 1);
                 }
             }
+            else Log.Warn().Write("Content emtpy or longer than defined max length.");
         }
 
         // Given a content this function will remove a clipboard 
