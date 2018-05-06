@@ -10,11 +10,11 @@ namespace ClipBoard
     public class Win32Hooks
     {
         public delegate IntPtr LowLevelKeyboardProc(
-      int nCode, IntPtr wParam, IntPtr lParam);
+            int nCode, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern IntPtr SetWindowsHookEx(int idHook,
-    LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
+            LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -43,8 +43,7 @@ namespace ClipBoard
         public static extern IntPtr GetModuleHandle(string lpModuleName);
 
         [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
-        public static extern IntPtr CreateRoundRectRgn
-       (
+        public static extern IntPtr CreateRoundRectRgn(
            int nLeftRect, // x-coordinate of upper-left corner
            int nTopRect, // y-coordinate of upper-left corner
            int nRightRect, // x-coordinate of lower-right corner
