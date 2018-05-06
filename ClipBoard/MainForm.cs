@@ -26,6 +26,7 @@ namespace ClipBoard
 
         public MainForm()
         {
+            Log.Info().Write("Init MainForm, Starting App.");
             InitializeComponent();
             list = this.listView;
             this.FormBorderStyle = FormBorderStyle.None;
@@ -217,23 +218,43 @@ namespace ClipBoard
         // increment the pasted counter for current clipboard content
         private void recordPaste()
         {
-            ClipBoardRecord clipBoardRecord;
-            if (Clipboard.ContainsText() && Clipboard.GetText().Length < maxCopyTextLength)
+            try
             {
-                clipBoardRecord = _listController.GetClipBoardRecordViaContent(Clipboard.GetText());
-                if (clipBoardRecord != null)
+                ClipBoardRecord clipBoardRecord;
+                if (Clipboard.ContainsText() && Clipboard.GetText().Length < maxCopyTextLength)
                 {
-                    _listController.IncrementPasted(clipBoardRecord.Content);
-                    updateList();
+                    clipBoardRecord = _listController.GetClipBoardRecordViaContent(Clipboard.GetText());
+                    if (clipBoardRecord != null)
+                    {
+                        _listController.IncrementPasted(clipBoardRecord.Content);
+                        updateList();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Log.Error().Write(e.Message);
+                Log.Error().Write(e.StackTrace);
             }
         }
 
         private void handleClipboardChanged()
         {
 
-            _listController.AddClipBoardRecord(Clipboard.GetText());
-            updateList();
+            try
+            {
+                _listController.AddClipBoardRecord(Clipboard.GetText());
+                
+            }
+            catch (Exception e)
+            {
+                Log.Error().Write(e.Message);
+                Log.Error().Write(e.StackTrace);
+            }
+            finally
+            {
+                updateList();
+            }
         }
 
         private void listView_DoubleClick(object sender, EventArgs e)
