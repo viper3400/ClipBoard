@@ -89,7 +89,7 @@ namespace ClipBoard
             }
             catch (Exception e)
             {
-                Log.Error().Write($"Error while saving file: {FileName}.");
+                Log.Error().Write("Error while saving file: " + FileName);
                 Log.Error().Write(e.Message);
                 throw;
             }
