@@ -164,7 +164,14 @@ namespace ClipBoard
             //save to csv
             if (allowSaveAsNowLoaded)
             {
-                _persistenceController.SaveToFile(_settings.ContentFile, _listController.SavedItems, _listController.RecentItems);
+                try
+                {
+                    _persistenceController.SaveToFile(_settings.ContentFile, _listController.SavedItems, _listController.RecentItems);
+                }
+                catch (Exception e)
+                { 
+                    MessageBox.Show(e.Message, "Error on saving CSV file.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
 
             //resize the form to fit the number of items
